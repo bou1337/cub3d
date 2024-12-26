@@ -1,71 +1,49 @@
+#include "cub3d.h"
 
-
-#include <stdlib.h>
-#include <string.h>
-
-// Helper function to count the number of words in the string
-static int word_count(const char *s, char c)
+static int count_words(const char *s, char c)
 {
     int count = 0;
-    int in_word = 0;
-
-    while (*s) {
-        if (*s != c && !in_word) {
-            in_word = 1;
+    while (*s)
+    {
+        while (*s == c)
+            s++;
+        if (*s)
             count++;
-        } else if (*s == c) {
-            in_word = 0;
-        }
-        s++;
+        while (*s && *s != c)
+            s++;
     }
-    return count;
+    return (count);
 }
 
-// Helper function to allocate and copy a word
-static char *alloc_word(const char *start, size_t len)
+static char *word_dup(const char *s, int start, int finish)
 {
-    char *word = malloc(len + 1); // Allocate memory for the word + null-terminator
-    if (!word)
-        return NULL;
-    strncpy(word, start, len); // Copy the word
-    word[len] = '\0';           // Null-terminate the word
-    return word;
+    char *word = malloc((finish - start + 1) * sizeof(char));
+    int i = 0;
+    while (start < finish)
+        word[i++] = s[start++];
+    word[i] = '\0';
+    return (word);
 }
 
-// The main ft_split function
 char **ft_split(const char *s, char c)
 {
-    if (!s)
-        return NULL;
+    char **split;
+    int i = 0, j = 0, start = -1;
 
-    int words = word_count(s, c); // Get the number of words
-    char **result = malloc((words + 1) * sizeof(char *)); // Allocate memory for the result array
-    if (!result)
-        return NULL;
-
-    int i = 0;
-    while (*s) {
-        if (*s != c) {
-            const char *start = s;
-            size_t len = 0;
-            // Find the length of the current word
-            while (*s && *s != c) {
-                len++;
-                s++;
-            }
-            // Allocate and copy the current word
-            result[i++] = alloc_word(start, len);
-            if (!result[i - 1]) {
-                // If allocation fails, free previously allocated memory
-                while (i-- > 0)
-                    free(result[i]);
-                free(result);
-                return NULL;
-            }
-        } else {
-            s++;
+    split = malloc((count_words(s, c) + 1) * sizeof(char *));
+    if (!split)
+        return (NULL);
+    while (s[i])
+    {
+        if (s[i] != c && start == -1)
+            start = i;
+        else if ((s[i] == c || s[i + 1] == '\0') && start != -1)
+        {
+            split[j++] = word_dup(s, start, (s[i] == c) ? i : i + 1);
+            start = -1;
         }
+        i++;
     }
-    result[i] = NULL; // Null-terminate the array
-    return result;
+    split[j] = NULL;
+    return (split);
 }
