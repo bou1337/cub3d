@@ -37,9 +37,13 @@ int main(void)
     if (!data.img)
         return (1);
     data.img_data = mlx_get_data_addr(data.img, &data.bpp, &data.line_len, &data.endian);
-    data.player_x = 1*SIZE ;
-    data.player_y = 1*SIZE ;
-
+    data.player_x = 10*SIZE ;
+    data.player_y = 10*SIZE ;
+    data.planeX = 0.66 ;
+    data.planeY = 0 ;
+    data.dirX = -1 ;
+    data.dirY = 0 ;
+    data.teta = M_PI/2 ;
     draw_map(&data);
     mlx_key_hook(data.win, key_code, &data);
     mlx_loop(data.mlx);

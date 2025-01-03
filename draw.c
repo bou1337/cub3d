@@ -17,7 +17,7 @@ void draw_rect(t_data *data, int x, int y, int color)
     int i ; 
     int j ;
     i = start_x ;
-   
+    
     while(i<end_x)
     {
          j= start_y ;
@@ -46,14 +46,15 @@ void draw_map(t_data *data)
                 j++ ; 
         }
         i++ ;
-    }
+}
  my_pixel_put(data, data->player_x, data->player_y, 0xFF0000) ;
  my_pixel_put(data, data->player_x, data->player_y+1, 0xFF0000) ;
  my_pixel_put(data, data->player_x+1, data->player_y, 0xFF0000) ;
  my_pixel_put(data, data->player_x-1, data->player_y, 0xFF0000) ;
  my_pixel_put(data, data->player_x, data->player_y-1, 0xFF0000) ;
-
-
-
-
+draw_line(data,data->player_x , data->player_y , data->player_x -40*cos(data->teta), data->player_y-40*sin(data->teta)) ;
+draw_line(data,data->player_x , data->player_y , data->player_x -40*cos(data->teta+M_PI/6), data->player_y-40*sin(data->teta+M_PI/6)) ;
+draw_line(data,data->player_x , data->player_y , data->player_x -40*cos(data->teta-M_PI/6), data->player_y-40*sin(data->teta-M_PI/6)) ;
 }
+
+
