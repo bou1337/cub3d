@@ -47,14 +47,39 @@ void draw_map(t_data *data)
         }
         i++ ;
 }
- my_pixel_put(data, data->player_x, data->player_y, 0xFF0000) ;
- my_pixel_put(data, data->player_x, data->player_y+1, 0xFF0000) ;
- my_pixel_put(data, data->player_x+1, data->player_y, 0xFF0000) ;
- my_pixel_put(data, data->player_x-1, data->player_y, 0xFF0000) ;
- my_pixel_put(data, data->player_x, data->player_y-1, 0xFF0000) ;
-draw_line(data,data->player_x , data->player_y , data->player_x -40*cos(data->teta), data->player_y-40*sin(data->teta)) ;
-draw_line(data,data->player_x , data->player_y , data->player_x -40*cos(data->teta+M_PI/6), data->player_y-40*sin(data->teta+M_PI/6)) ;
-draw_line(data,data->player_x , data->player_y , data->player_x -40*cos(data->teta-M_PI/6), data->player_y-40*sin(data->teta-M_PI/6)) ;
-}
 
 
+ my_pixel_put(data, data->player_x, data->player_y, 0x00FFFF) ;
+ my_pixel_put(data, data->player_x, data->player_y+1, 0x00FFFF) ;
+ my_pixel_put(data, data->player_x+1, data->player_y, 0x00FFFF) ; 
+ my_pixel_put(data, data->player_x-1, data->player_y, 0x00FFFF) ;
+ my_pixel_put(data, data->player_x, data->player_y-1, 0x00FFFF) ;
+ draw_rays(data) ; 
+draw_line(data,data->player_x , data->player_y , data->player_x +70*cos(data->teta), data->player_y+70*sin(data->teta)) ;
+ draw_line(data,data->player_x , data->player_y , data->player_x +70*cos(data->teta+FOV/2), data->player_y+70*sin(data->teta+FOV/2)) ;
+ draw_line(data,data->player_x , data->player_y , data->player_x +70*cos(data->teta-FOV/2), data->player_y+70*sin(data->teta-FOV/2)) ;
+ // draw_line(data,data->player_x , data->player_y , data->player_x +40*cos(data->teta+FOV/3), data->player_y+40*sin(data->teta+FOV/3)) ;
+ //  draw_line(data,data->player_x , data->player_y , data->player_x +40*cos(data->teta+FOV/RAYS_NUM), data->player_y+40*sin(data->teta+FOV/RAYS_NUM)) ;
+   // draw_line(data,data->player_x , data->player_y , data->player_x +40*cos(data->teta+FOV/RAYS_NUM), data->player_y+40*sin(data->teta+FOV/RAYS_NUM)) ;
+     //draw_line(data,data->player_x , data->player_y , data->player_x +40*cos(data->teta-FOV/RAYS_NUM), data->player_y+40*sin(data->teta-FOV/RAYS_NUM)) ;
+ 
+ }
+
+
+
+ void   draw_rays(t_data  * data)
+ {
+
+    int  i  ;
+    i  = 0  ;
+    double  angl  ; 
+    angl =  -M_PI/(double)6 ;
+
+    while( i < 30*20 )
+    {
+
+        draw_line ( data , data->player_x , data->player_y , data->player_x + 40*cos(data->teta +angl) , data->player_y +40*sin(data->teta +angl)) ;
+        i++ ;
+        angl += M_PI/(3*(30*20 ))  ;
+    }
+ }

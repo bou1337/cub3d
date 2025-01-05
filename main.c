@@ -2,7 +2,7 @@
 
 char *map_string = 
         "11111111111111111111\n"
-        "10000000000000000001\n"
+        "11000000000000000011\n"
         "10000000000000000001\n"
         "10000000P00000000001\n"
         "10000000011111111111\n"
@@ -18,7 +18,7 @@ char *map_string =
         "10000000000111111111\n"
         "10000000000000000001\n"
         "11111111111100000001\n"
-        "10000000000000000001\n"
+        "11000000000000000011\n"
         "11111111111111111111\n";
 
 int main(void)
@@ -44,8 +44,12 @@ int main(void)
     data.dirX = -1 ;
     data.dirY = 0 ;
     data.teta = M_PI/2 ;
-    draw_map(&data);
-    mlx_key_hook(data.win, key_code, &data);
+   // draw_map(&data);
+
+     mlx_loop_hook(data.mlx , update_game ,&data) ;
+    mlx_hook(data.win,3, 1L << 0, key_code, &data);
+     mlx_hook(data.win,2, 1L << 0, key_code, &data);
+   
     mlx_loop(data.mlx);
     return (0);
 }

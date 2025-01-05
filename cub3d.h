@@ -7,11 +7,16 @@
 # include <stdio.h>
 #include <math.h>
 
-# define X 600
-# define Y 600
+# define X 30*20
+# define Y 30*19
 # define SIZE 30
 # define SPEED  1  
-
+#define W_KEY 119
+#define A_KEY 97
+#define S_KEY 115
+#define D_KEY 100
+#define FOV  M_PI/3 
+#define RAYS_NUM 30*20  
 typedef struct s_data {
     void    *mlx;          
     void    *win;          
@@ -37,7 +42,6 @@ int   key_code(int keycode, t_data *data);
 char  **ft_split(const char *s, char c);
 int update_game(t_data *data) ;
 void draw_line(t_data *data , double x0 , double y0 , double x1, double y1) ;
-
-
+void   draw_rays(t_data  * data)  ; 
 
 #endif
