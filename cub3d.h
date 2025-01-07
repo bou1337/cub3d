@@ -17,6 +17,34 @@
 #define D_KEY 100
 #define FOV  M_PI/3 
 #define RAYS_NUM 30*20  
+
+
+typedef struct s_dir
+{
+
+    int down ;
+    int  up ;
+    int  right ;
+    int left ;
+}t_dir ;
+
+
+typedef struct s_intr
+{
+
+
+    int x_wall ;
+    int y_wall ;
+    int x_intr  ;
+    int  y_intr ;
+} t_intr ;
+typedef  struct s_rays 
+{
+    int x_wall ;
+    int y_wall ;
+    double distance ;
+
+}t_rays ;
 typedef struct s_data {
     void    *mlx;          
     void    *win;          
@@ -43,5 +71,9 @@ char  **ft_split(const char *s, char c);
 int update_game(t_data *data) ;
 void draw_line(t_data *data , double x0 , double y0 , double x1, double y1) ;
 void   draw_rays(t_data  * data)  ; 
+void   dir_p(t_dir *dir , double angl) ; 
+void   normalize_angl(double *angl) ;
+void intr_horizontal(t_data *data ,int  *x_wall, int  *y_wall, double angl) ;
+int check_wall(t_data  data , double x , double y) ;
 
 #endif
