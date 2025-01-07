@@ -64,66 +64,65 @@ void draw_map(t_data *data)
      //draw_line(data,data->player_x , data->player_y , data->player_x +40*cos(data->teta-FOV/RAYS_NUM), data->player_y+40*sin(data->teta-FOV/RAYS_NUM)) ;
  
  }
+void draw_rays(t_data *data) {
+    int i = 0;
+    double angl;
+    double angl1;
+    int x_wall, y_wall;
 
- void   draw_rays(t_data  * data)
- {
+    int num_rays = 20*19; 
+    double fov = M_PI / 3; 
 
-    int  i  ;
-    i  = 0  ;
-    double  angl  ;
-    double angl1 ; 
-    int x_wall ;
-    int  y_wall ;
-    angl =  -M_PI/(double)6 ;
+    angl = -fov / 2; 
 
-    while( i < 1 )
-    {
-        angl1 = data->teta + angl  ;
-        normalize_angl(&angl1) ;
-        intr_horizontal(data, &x_wall, &y_wall,angl1);
-        draw_line ( data , data->player_x , data->player_y , x_wall ,y_wall) ;
-        i++ ;
-        angl += M_PI/(3*(30*20 ))  ;
+    while (i < num_rays) {
+        angl1 = data->teta + angl;
+        normalize_angl(&angl1);
+        intr_horizontal(data, &x_wall, &y_wall, angl1);
+        draw_line(data, (int)data->player_x, (int)data->player_y, x_wall, y_wall);
+        i++;
+        angl += fov / num_rays; 
     }
- }
+}
 
 
 
+void intr_horizontal(t_data *data, int *x_wall, int *y_wall, double angl) {
+    int y_intr;
+    double x_intr;
+    double dx, dy;
+    double new_x, new_y;
+    t_dir dir;
 
- void intr_horizontal(t_data *data ,int  *x_wall, int  *y_wall, double angl)
- {
-   
-
-    int x_intr ; 
-    int y_intr ;
-    double new_x ;
-    double new_y ;
-    double dx ;
-    double dy  ;
-    y_intr = ((int)data->planeY)*SIZE  ;
-    x_intr = data->player_x + (y_intr - data->player_y)/tan(angl) ;
-    dy  =SIZE ;
-    dx = dy/tan(angl) ;
-    new_x = x_intr ;
-    new_y = y_intr ;
-    while(!check_wall(*data ,new_x , new_y))
-    {
-        new_x +=dx ;
-        new_y +=dy ;
+    dir_r(&dir, angl);
+    if (dir.down == 1) {
+        y_intr = ((int)data->player_y / SIZE) * SIZE + SIZE;
+    } else {
+        y_intr = ((int)data->player_y / SIZE) * SIZE   ;
     }
-    *x_wall = new_x  ;
-    *y_wall = new_y ;
- }
+    x_intr = data->player_x + (y_intr - data->player_y) / tan(angl);
+    dy = (dir.down == 1) ? -SIZE : SIZE;
+    dx = dy / tan(angl);
 
- int check_wall(t_data  data , double x , double y)
- {
+    new_x = x_intr;
+    new_y = y_intr;
+    while (!check_wall(*data, new_x, new_y)) {
+        new_x += dir.right*dx;
+        new_y +=dir.down*dy;
+    }
 
-    int new_x ;
-    int new_y ;
+    *x_wall = (int)new_x;
+    *y_wall = (int)new_y;
+}
 
-    new_x = x/SIZE ;
-    new_y = y/SIZE ;
-    if(data.map[new_x][new_y]=='1')
-    return 1 ;
-    return 0 ;
- }
+int check_wall(t_data data, double x, double y) {
+    int new_x = (int)floor(x / SIZE);
+    int new_y = (int)floor(y / SIZE);
+
+    if (new_x < 0 || new_x >= 20 || new_y < 0 || new_y >= 19)
+        return 1; 
+
+    if (data.map[new_y][new_x] == '1')
+        return 1;
+    return 0;
+}

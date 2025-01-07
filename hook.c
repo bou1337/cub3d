@@ -5,8 +5,11 @@ int    pixel_inside(t_data *data, int x, int y)
     int i;
     int j;
 
-    j = ( x) / SIZE;
-    i = ( y) / SIZE;
+    i = ( x) / SIZE;
+    j = ( y) / SIZE;
+    if (i < 0 || i >= 20 || j< 0 || j >= 19)
+        return 0; 
+
     if (data->map[i][j] == '1')
         return (0);
     return (1);

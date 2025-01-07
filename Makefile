@@ -3,7 +3,7 @@ CC = gcc
 //CFLAGS = -Wall -Wextra -Werror
 MLX = -lmlx -lXext -lX11 -lm
 
-SRCS = main.c  draw.c  hook.c utlis.c draw_line.c 
+SRCS = main.c  draw.c  hook.c utlis.c draw_line.c draw_rays.c
 OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)

@@ -48,14 +48,14 @@ char **ft_split(const char *s, char c)
     return (split);
 }
 
+void normalize_angl(double *angl) {
+    int k  ;
 
-void   normalize_angl(double *angl)
-{
-    int  k  ; 
+    k = *angl/(2*M_PI) ;
 
-    k = *angl /(2*M_PI) ;
-    *angl = *angl -k*(2*M_PI) ;
+    *angl  = *angl - k*(2*M_PI) ;
 
     if(*angl<0)
-    *angl = *angl +2*M_PI ;
+    *angl =  *angl +2*M_PI ;
+
 }
