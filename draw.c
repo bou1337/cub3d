@@ -68,86 +68,89 @@ void draw_map(t_data *data)
  }
 void draw_rays(t_data *data) {
     t_rays ray;
-    int num_rays = 20*20; // Number of rays to cast
-    double fov = M_PI / 3; // Field of view (60 degrees)
+    int num_rays = 20*20; 
+    double fov = M_PI / 3; 
     double angle_step = fov / num_rays;
     double angl_r = data->teta - fov / 2;
-
-    for (int i = 0; i < num_rays; i++) {
+    int  i  = 0 ;
+    while(i<num_rays) {
         normalize_angl(&angl_r);
-
-        // Calculate intersections
         horizontal_intr(data, &ray, angl_r);
         vertical_intr(data, &ray, angl_r);
-
-        // Draw the closest wall intersection
-        if (ray.dis_h <= ray.dis_v)
+        if (ray.dis_h < ray.dis_v)
             draw_line(data, data->player_x, data->player_y, ray.x_wall_h, ray.y_wall_h);
         else
             draw_line(data, data->player_x, data->player_y, ray.x_wall_v, ray.y_wall_v);
 
         angl_r += angle_step;
+        i++ ;
     }
-}
-
-void horizontal_intr(t_data *data, t_rays *ray, double angl) {
+}void horizontal_intr(t_data *data, t_rays *ray, double angl) {
     dir_r(ray, angl);
-
-    ray->y_intr = (int)(data->player_y / SIZE) * SIZE;
-    if (ray->down) ray->y_intr += SIZE;
+    ray->y_intr = floor(data->player_y / SIZE) * SIZE;
+    if (ray->down) 
+        ray->y_intr += SIZE; 
 
     ray->x_intr = data->player_x + (ray->y_intr - data->player_y) / tan(angl);
 
-    ray->dy = ray->down ? SIZE : -SIZE;
-    ray->dx = ray->dy / tan(angl);
-
+    ray->dy = ray->down ? SIZE : -SIZE; 
+    ray->dx = ray->dy / tan(angl);      
+    if (angl == 0 || angl == M_PI) {
+        ray->dy = ray->down ? SIZE : -SIZE;
+        ray->dx = 0; 
+    }
     ray->x_wall_h = ray->x_intr;
     ray->y_wall_h = ray->y_intr;
-
-    while (!check_wall(data, ray->x_wall_h, ray->y_wall_h)) {
-        if (ray->x_wall_h < 0 || ray->x_wall_h >= 20 * SIZE || 
-            ray->y_wall_h < 0 || ray->y_wall_h >= 20 * SIZE) break;
-
+    while (!check_wall(data, ray->x_wall_h, ray->y_wall_h - (ray->down ? 0 : 1))) {
         ray->x_wall_h += ray->dx;
-        ray->y_wall_h += ray->dy;
+        ray->y_wall_h += ray->dy; 
+        if (ray->x_wall_h < 0 || ray->x_wall_h >= 20* SIZE ||
+            ray->y_wall_h < 0 || ray->y_wall_h >=20 * SIZE)
+            break;
     }
-
-    ray->dis_h = sqrt(pow(ray->x_wall_h - data->player_x, 2) + 
+    ray->dis_h = sqrt(pow(ray->x_wall_h - data->player_x, 2) +
                       pow(ray->y_wall_h - data->player_y, 2));
 }
+
 void vertical_intr(t_data *data, t_rays *ray, double angl) {
     dir_r(ray, angl);
-
-    ray->x_intr =(int)(data->player_x / SIZE) * SIZE;
-    if (ray->right) ray->x_intr += SIZE;
+    ray->x_intr = floor(data->player_x / SIZE) * SIZE;
+    if (ray->right) 
+        ray->x_intr += SIZE; 
 
     ray->y_intr = data->player_y + (ray->x_intr - data->player_x) * tan(angl);
+    ray->dx = ray->right ? SIZE : -SIZE; 
+    ray->dy = ray->dx * tan(angl);     
 
-    ray->dx = ray->right ? SIZE : -SIZE;
-    ray->dy = ray->dx * tan(angl);
-
+    if (angl == M_PI / 2 || angl == 3 * M_PI / 2) {
+        ray->dx = ray->right ? SIZE : -SIZE;
+        ray->dy = 0;
+    }
     ray->x_wall_v = ray->x_intr;
     ray->y_wall_v = ray->y_intr;
-
-    while (!check_wall(data, ray->x_wall_v, ray->y_wall_v)) {
-        if (ray->x_wall_v < 0 || ray->x_wall_v >= 20 * SIZE || 
-            ray->y_wall_v < 0 || ray->y_wall_v >= 20 * SIZE) break;
-
-        ray->x_wall_v += ray->dx;
-        ray->y_wall_v += ray->dy;
+    while (!check_wall(data, ray->x_wall_v - (ray->right ? 0 : 1), ray->y_wall_v)) {
+        ray->x_wall_v += ray->dx; 
+        ray->y_wall_v += ray->dy; 
+        if (ray->x_wall_v < 0 || ray->x_wall_v >= 20 * SIZE ||
+            ray->y_wall_v < 0 || ray->y_wall_v >= 20 * SIZE)
+            break;
     }
-
-    ray->dis_v = sqrt(pow(ray->x_wall_v - data->player_x, 2) + 
+    ray->dis_v = sqrt(pow(ray->x_wall_v - data->player_x, 2) +
                       pow(ray->y_wall_v - data->player_y, 2));
 }
 
 
+
 int check_wall(t_data *data, double x, double y) {
-    int grid_x = x / SIZE;
-    int grid_y = y / SIZE;
+    int i;
+    int j;
 
-    if (grid_x < 0 || grid_x >= 20 || grid_y < 0 || grid_y >= 20)
-        return 1; // Out of bounds is considered a wall
+    i = ( x) / SIZE;
+    j = ( y) / SIZE;
+    if (i < 0 || i >= 20 || j< 0 || j >= 20)
+        return 1; 
 
-    return data->map[grid_y][grid_x] == '1';
+    if (data->map[j][i] == '1')
+        return (1);
+    return (0);
 }
