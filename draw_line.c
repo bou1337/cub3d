@@ -23,7 +23,7 @@ void draw_line(t_data *data , double x0 , double y0 , double x1, double y1)
     x = x0 ;
     y = y0 ;
     while(i<step)
-    {
+    {   
         my_pixel_put(data, (int)x, (int)y,0xFF0000);
         x+=Xinc ;
         y += Yinc ;

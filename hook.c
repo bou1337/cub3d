@@ -7,10 +7,10 @@ int    pixel_inside(t_data *data, int x, int y)
 
     i = ( x) / SIZE;
     j = ( y) / SIZE;
-    if (i < 0 || i >= 20 || j< 0 || j >= 19)
+    if (i < 0 || i >= 20 || j< 0 || j >= 20)
         return 0; 
 
-    if (data->map[i][j] == '1')
+    if (data->map[j][i] == '1')
         return (0);
     return (1);
 }
@@ -28,24 +28,24 @@ int key_code(int keycode, t_data *data)
         data->teta += 0.1;
     else if (keycode == W_KEY)
     {
-        new_x = (data->player_x  +10*cos(data->teta)) ;
-        new_y = (data->player_y +10*sin(data->teta)) ;
+        new_x = (data->player_x  +cos(data->teta)) ;
+        new_y = (data->player_y +sin(data->teta)) ;
     }
     else if (keycode == S_KEY)
     {
-        new_x = (data->player_x  -10*cos(data->teta)) ;
-        new_y = (data->player_y  - 10*sin(data->teta)) ;
+        new_x = (data->player_x  -cos(data->teta)) ;
+        new_y = (data->player_y  - sin(data->teta)) ;
     }
      else if (keycode == A_KEY)
     {
-        new_x = (data->player_x  +10*cos(data->teta+M_PI/2)) ;
-        new_y = (data->player_y +10*sin(data->teta+M_PI/2)) ;
+        new_x = (data->player_x  +cos(data->teta+M_PI/2)) ;
+        new_y = (data->player_y +sin(data->teta+M_PI/2)) ;
     }
 
     else if (keycode == D_KEY)
     {
-        new_x = (data->player_x  -10*cos(data->teta+M_PI/2)) ;
-        new_y = (data->player_y  - 10*sin(data->teta+ M_PI/2)) ;
+        new_x = (data->player_x  -cos(data->teta+M_PI/2)) ;
+        new_y = (data->player_y  -sin(data->teta+M_PI/2)) ;
     }
     if (pixel_inside(data, new_x, new_y))
     {

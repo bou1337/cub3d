@@ -19,6 +19,7 @@ char *map_string =
         "10000000000000000001\n"
         "11111111111100000001\n"
         "11000000000000000011\n"
+        "11000000000000000011\n"
         "11111111111111111111\n";
 
 int main(void)
@@ -43,7 +44,7 @@ int main(void)
     data.planeY = 0 ;
     data.dirX = -1 ;
     data.dirY = 0 ;
-    data.teta = M_PI/2 ;
+    data.teta = M_PI/2;
    // draw_map(&data);
 
      mlx_loop_hook(data.mlx , update_game ,&data) ;
