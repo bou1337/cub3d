@@ -9,7 +9,7 @@
 
 # define X 30*20
 # define Y 30*20
-# define SIZE 30
+# define SIZE 8
 # define SPEED  1  
 #define W_KEY 119
 #define A_KEY 97
