@@ -22,10 +22,14 @@ char *map_string =
         "11000000000000000011\n"
         "11111111111111111111\n";
 
+
 int main(void)
 {
     t_data data;
-    int **tab ;
+
+
+    t_rays *ray=malloc(sizeof(t_rays)*Y) ;
+    data.ray=ray ;
     data.map = ft_split(map_string, '\n');
 
     data.mlx = mlx_init();

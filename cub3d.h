@@ -33,10 +33,13 @@ typedef  struct s_rays
     double  dy ;
     double x_wall_h ;
     double y_wall_h ;
-     double x_wall_v ;
+    double x_wall_v ;
     double y_wall_v;
     double dis_h ;
     double dis_v ;
+    double x_wall ;
+    double y_wall ;
+    double dis ;
     int down ;
     int right ;
 }t_rays ;
@@ -55,7 +58,8 @@ typedef struct s_data {
     double  dirY;          
     double  planeX;        
     double  planeY;
-    double  teta ;             
+    double  teta ;
+    t_rays  *ray;
 } t_data;
 
 int   my_pixel_put(t_data *img, int x, int y, int color);

@@ -4,9 +4,9 @@
 void draw_line(t_data *data , double x0 , double y0 , double x1, double y1)
 {
 
-    int step ; 
-    int dx ;
-    int dy ;
+    double step ; 
+    double dx ;
+    double dy ;
     int i ; 
 
     i = 0 ;
@@ -16,8 +16,8 @@ void draw_line(t_data *data , double x0 , double y0 , double x1, double y1)
     float Xinc ;
     float Yinc ;
 
-    Xinc = dx/(float)step ;
-    Yinc = dy/ (float)step ;
+    Xinc = dx/step ;
+    Yinc = dy/step ;
     float x ;
     float y ;
     x = x0 ;

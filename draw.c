@@ -68,7 +68,7 @@ void draw_map(t_data *data)
  }
 void draw_rays(t_data *data) {
     t_rays ray;
-    int num_rays = 20*20; 
+    int num_rays = 20*30; 
     double fov = M_PI / 3; 
     double angle_step = fov / num_rays;
     double angl_r = data->teta - fov / 2;
@@ -78,10 +78,23 @@ void draw_rays(t_data *data) {
         horizontal_intr(data, &ray, angl_r);
         vertical_intr(data, &ray, angl_r);
         if (ray.dis_h < ray.dis_v)
-            draw_line(data, data->player_x, data->player_y, ray.x_wall_h, ray.y_wall_h);
+        {
+            data->ray[i].x_wall=ray.x_wall_h ;
+            data->ray[i].y_wall = ray.y_wall_h ;
+            data->ray[i].dis=ray.dis_h ;
+        }
+     //       draw_line(data, data->player_x, data->player_y, ray.x_wall_h, ray.y_wall_h);
         else
-            draw_line(data, data->player_x, data->player_y, ray.x_wall_v, ray.y_wall_v);
+        {
 
+             data->ray[i].x_wall=ray.x_wall_v ;
+            data->ray[i].y_wall = ray.y_wall_v ;
+            data->ray[i].dis=ray.dis_v ;
+        }
+       //     draw_line(data, data->player_x, data->player_y, ray.x_wall_v, ray.y_wall_v);
+       
+
+        draw_line(data, data->player_x, data->player_y, data->ray[i].x_wall,data->ray[i].y_wall);
         angl_r += angle_step;
         i++ ;
     }
