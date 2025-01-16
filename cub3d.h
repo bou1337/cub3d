@@ -75,4 +75,6 @@ void horizontal_intr(t_data *data, t_rays *ray, double angl) ;
 int check_wall(t_data *data, double x, double y) ;
 void dir_r(t_rays *ray, double angl) ;
 void vertical_intr(t_data *data, t_rays *ray, double angl) ;
+void draw_vertical_line(t_data *data, int x, int start, int end) ;
+void draw_wall(t_data *data) ;
 #endif

@@ -60,7 +60,7 @@ int key_code(int keycode, t_data *data)
 int update_game(t_data *data)
 {
 
-     mlx_clear_window(data->mlx, data->win);
+    mlx_clear_window(data->mlx, data->win);
     draw_map(data);
     mlx_put_image_to_window(data->mlx, data->win, data->img, 0, 0);
 }

@@ -95,6 +95,7 @@ void draw_rays(t_data *data) {
        
 
         draw_line(data, data->player_x, data->player_y, data->ray[i].x_wall,data->ray[i].y_wall);
+        draw_wall(data) ;
         angl_r += angle_step;
         i++ ;
     }
@@ -166,4 +167,37 @@ int check_wall(t_data *data, double x, double y) {
     if (data->map[j][i] == '1')
         return (1);
     return (0);
+}
+
+void draw_wall(t_data *data)
+{
+    int screen_width = 20*30; 
+    int screen_height = 20*30;
+    double fov = M_PI / 3;
+    double dist_proj_plane = (screen_width / 2) / tan(fov / 2); 
+    int i;
+    i = 0 ;
+    while(i<20*30) 
+    {
+    
+        double perp_distance = data->ray[i].dis * cos(data->teta - atan2(data->ray[i].y_wall - data->player_y, data->ray[i].x_wall - data->player_x));
+        int wall_height = (int)((SIZE / perp_distance) * dist_proj_plane);
+        int wall_start = (screen_height / 2) - (wall_height / 2);
+        int wall_end = (screen_height / 2) + (wall_height / 2);
+        if (wall_start < 0) wall_start = 0;
+        if (wall_end >= screen_height) wall_end = screen_height - 1;
+        draw_vertical_line(data, i, wall_start, wall_end);
+        i++ ;
+    }
+}
+
+
+void draw_vertical_line(t_data *data, int x, int start, int end)
+{
+    int y;
+
+    for (y = start; y <= end; y++)
+    {
+        my_pixel_put(data, x, y, 0xFFFFFF); // Example: white color
+    }
 }
