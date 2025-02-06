@@ -167,30 +167,33 @@ int check_wall(t_data *data, double x, double y) {
     if (data->map[j][i] == '1')
         return (1);
     return (0);
-}
-
-void draw_wall(t_data *data)
+}void draw_wall(t_data *data)
 {
-    int screen_width = 20*30; 
-    int screen_height = 20*30;
+    int screen_width = 20 * 30; 
+    int screen_height = 20 * 30;
     double fov = M_PI / 3;
     double dist_proj_plane = (screen_width / 2) / tan(fov / 2); 
-    int i;
-    i = 0 ;
-    while(i<20*30) 
+    int i = 0;
+
+    while (i < screen_width) 
     {
-    
-        double perp_distance = data->ray[i].dis * cos(data->teta - atan2(data->ray[i].y_wall - data->player_y, data->ray[i].x_wall - data->player_x));
+        double ray_angle = atan2(data->ray[i].y_wall - data->player_y, 
+                                 data->ray[i].x_wall - data->player_x);
+        double perp_distance = data->ray[i].dis * cos(data->teta - ray_angle);
+        
+        if (perp_distance <= 0) perp_distance = 1; 
+
         int wall_height = (int)((SIZE / perp_distance) * dist_proj_plane);
-        int wall_start = (screen_height / 2) - (wall_height / 2);
-        int wall_end = (screen_height / 2) + (wall_height / 2);
-        if (wall_start < 0) wall_start = 0;
-        if (wall_end >= screen_height) wall_end = screen_height - 1;
+        int wall_start = fmax(0, (screen_height / 2) - (wall_height / 2));
+        int wall_end = fmin(screen_height, (screen_height / 2) + (wall_height / 2));
+
+        draw_vertical_line_color(data, i, 0, wall_start, CEILING_COLOR);
         draw_vertical_line(data, i, wall_start, wall_end);
-        i++ ;
+        draw_vertical_line_color(data, i, wall_end, screen_height, FLOOR_COLOR);
+
+        i++;
     }
 }
-
 
 void draw_vertical_line(t_data *data, int x, int start, int end)
 {
@@ -198,6 +201,15 @@ void draw_vertical_line(t_data *data, int x, int start, int end)
 
     for (y = start; y <= end; y++)
     {
-        my_pixel_put(data, x, y, 0xFFFFFF); // Example: white color
+        my_pixel_put(data, x, y, 0xFFFFFF); 
+    }
+}
+void draw_vertical_line_color(t_data *data, int x, int start, int end, int color)
+{
+    int y = start;
+    while (y < end)
+    {
+        my_pixel_put(data, x, y, color);
+        y++;
     }
 }

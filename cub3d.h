@@ -17,6 +17,8 @@
 #define D_KEY 100
 #define FOV  M_PI/3 
 #define RAYS_NUM 30*20
+#define FLOOR_COLOR   0x654321  // Brown color for the floor
+#define CEILING_COLOR 0x87CEEB  // Light blue color for the ceiling (sky)
 
 
 typedef struct s_dir
@@ -77,4 +79,5 @@ void dir_r(t_rays *ray, double angl) ;
 void vertical_intr(t_data *data, t_rays *ray, double angl) ;
 void draw_vertical_line(t_data *data, int x, int start, int end) ;
 void draw_wall(t_data *data) ;
+void draw_vertical_line_color(t_data *data, int x, int start, int end, int color) ;
 #endif
