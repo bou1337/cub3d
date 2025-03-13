@@ -6,7 +6,7 @@
 /*   By: hfazaz <hfazaz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 17:46:27 by hfazaz            #+#    #+#             */
-/*   Updated: 2025/03/08 22:56:50 by hfazaz           ###   ########.fr       */
+/*   Updated: 2025/03/13 23:22:37 by hfazaz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,222 +15,414 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <ctype.h>
+#include <math.h>
 
-int ft_strlen(char *str)
+/*
+** Basic helper functions
+*/
+int		ft_strlen(char *str)
 {
-    int i = 0;
+    int	i;
+
+    i = 0;
     while (str[i])
         i++;
-    return i;
+    return (i);
 }
 
-char *get_line(int fd)
+int		check_extension(const char *filename)
 {
-    char *line;
-    int i;
+    int	len;
+
+    len = ft_strlen((char *)filename);
+    if (len < 4)
+        return (0);
+    if (filename[len - 4] == '.' && filename[len - 3] == 'c' &&
+        filename[len - 2] == 'u' && filename[len - 1] == 'b')
+        return (1);
+    return (0);
+}
+
+char	*get_line(int fd)
+{
+    char	*line;
+    int		i;
 
     i = 0;
     line = malloc(sizeof(char) * 2147483647);
     if (!line)
-        return NULL;
+        return (NULL);
     while (read(fd, &line[i], 1))
     {
         if (line[i] == '\n')
         {
             line[i] = '\0';
-            printf("----------->  %s\n", line);
-            return line;
+            return (line);
         }
         i++;
     }
     if (i > 0)
     {
         line[i] = '\0';
-        printf("----------->  %s\n", line);
-        return line;
+        return (line);
     }
     free(line);
-    return NULL;  
+    return (NULL);
 }
 
-/* Check if a given line contains only allowed map characters.
-   Allowed characters are: space, '0', '1', '2', 'N','S','W','E'
-*/
-int is_map_line(char *line)
+int		is_map_line(char *line)
 {
-    int i = 0;
+    int	i;
+
+    i = 0;
     if (!line || !line[0])
-        return 0;
+        return (0);
     while (line[i])
     {
-        if (line[i] != ' ' && line[i] != '0' && line[i] != '1' &&
-            line[i] != '2' && line[i] != 'N' && line[i] != 'S' &&
-            line[i] != 'W' && line[i] != 'E')
-            return 0;
+        if (line[i] != ' ' && line[i] != '0' && line[i] != '1'
+            && line[i] != '2' && line[i] != 'N' && line[i] != 'S'
+            && line[i] != 'W' && line[i] != 'E')
+            return (0);
         i++;
     }
-    return 1;
+    return (1);
 }
 
 /*
- * After reading the raw map, pad every line to max_len.
- */
-char **pad_map(char **map)
+** pad_map helpers: get_max_len and pad_line.
+*/
+static int	get_max_len(char **map)
 {
-    int i, j;
-    int max_len = 0;
-    int row = 0;
-    char **padded;
-    
-    while (map[row])
-    {
-        int len = ft_strlen(map[row]);
-        if (len > max_len)
-            max_len = len;
-        row++;
-    }
-    padded = malloc(sizeof(char *) * (row + 1));
-    if (!padded)
-        return NULL;
-    for (i = 0; i < row; i++)
-    {
-        padded[i] = malloc(sizeof(char) * (max_len + 1));
-        if (!padded[i])
-            return NULL;
-        j = 0;
-        while (map[i][j])
-        {
-            padded[i][j] = map[i][j];
-            j++;
-        }
-        // pad the rest with spaces
-        while (j < max_len)
-            padded[i][j++] = ' ';
-        padded[i][j] = '\0';
-    }
-    padded[i] = NULL;
-    return padded;
-}
-
-char **save_map(int fd)
-{
-    char *line;
-    char **map;
-    int i;
+    int	i;
+    int	max;
+    int	len;
 
     i = 0;
-    map = malloc(sizeof(char *) * 2147483647);
-    if (!map)
-        return NULL;
-    // Skip configuration or non-map lines until a valid map line is found.
+    max = 0;
+    while (map[i])
+    {
+        len = ft_strlen(map[i]);
+        if (len > max)
+            max = len;
+        i++;
+    }
+    return (max);
+}
+
+static char	*pad_line(char *line, int max_len)
+{
+    int		i;
+    int		len;
+    char	*new_line;
+    char	fill;
+
+    len = ft_strlen(line);
+    new_line = malloc(sizeof(char) * (max_len + 1));
+    if (!new_line)
+        return (NULL);
+    i = 0;
+    while (i < len)
+    {
+        new_line[i] = line[i];
+        i++;
+    }
+    fill = (line[len - 1] == '1') ? '1' : ' ';
+    while (i < max_len)
+        new_line[i++] = fill;
+    new_line[i] = '\0';
+    return (new_line);
+}
+
+char	**pad_map(char **map)
+{
+    int		i;
+    int		row;
+    int		max_len;
+    char	**padded;
+
+    row = 0;
+    while (map[row])
+        row++;
+    max_len = get_max_len(map);
+    padded = malloc(sizeof(char *) * (row + 1));
+    if (!padded)
+        return (NULL);
+    i = 0;
+    while (i < row)
+    {
+        padded[i] = pad_line(map[i], max_len);
+        if (!padded[i])
+            return (NULL);
+        i++;
+    }
+    padded[i] = NULL;
+    return (padded);
+}
+
+/*
+** Color parsing and integer conversion
+*/
+int		parse_int(const char *str, int *i)
+{
+    int	num;
+    int	sign;
+
+    num = 0;
+    sign = 1;
+    while (str[*i] == ' ' || str[*i] == '\t')
+        (*i)++;
+    if (str[*i] == '-')
+    {
+        sign = -1;
+        (*i)++;
+    }
+    while (str[*i] >= '0' && str[*i] <= '9')
+    {
+        num = num * 10 + (str[*i] - '0');
+        (*i)++;
+    }
+    return (sign * num);
+}
+
+void	parse_color(char *line, int *r, int *g, int *b)
+{
+    int	i;
+
+    i = 1;
+    *r = parse_int(line, &i);
+    if (line[i] == ',')
+        i++;
+    *g = parse_int(line, &i);
+    if (line[i] == ',')
+        i++;
+    *b = parse_int(line, &i);
+}
+
+/*
+** Helpers to split read_cub_file into two parts.
+*/
+static int	read_config_lines(int fd, t_data *data, char **map, int *i)
+{
+    char	*line;
+    int		r;
+    int		g;
+    int		b;
+
     while ((line = get_line(fd)))
     {
-        if (is_map_line(line))
-            break;
-        free(line);
+        if (line[0] == 'C')
+        {
+            parse_color(line, &r, &g, &b);
+            data->textures.ceil_color = (r << 16) | (g << 8) | b;
+            free(line);
+        }
+        else if (line[0] == 'F')
+        {
+            parse_color(line, &r, &g, &b);
+            data->textures.floor_color = (r << 16) | (g << 8) | b;
+            free(line);
+        }
+        else if (is_map_line(line))
+        {
+            map[*i] = line;
+            (*i)++;
+            return (1);
+        }
+        else
+            free(line);
     }
-    if (!line)
-    {
-        free(map);
-        return NULL;
-    }
-    map[i++] = line;
+    return (0);
+}
+
+static void	read_map_lines(int fd, char **map, int *i)
+{
+    char	*line;
+
     while ((line = get_line(fd)))
     {
         if (!is_map_line(line))
         {
             free(line);
-            break;
+            break ;
         }
-        map[i++] = line;
+        map[*i] = line;
+        (*i)++;
     }
-    map[i] = NULL;
-    // Pad the map so all lines have the same length.
-    return pad_map(map);
+    map[*i] = NULL;
 }
 
-int check_top_bottom(char **map, int size)
+/*
+** Main file reading function, now split into smaller helpers.
+*/
+char	**read_cub_file(int fd, t_data *data)
 {
-    int i = 0;
-    
+    char	**map;
+    int		i;
+
+    i = 0;
+    map = malloc(sizeof(char *) * 2147483647);
+    if (!map)
+        return (NULL);
+    if (!read_config_lines(fd, data, map, &i))
+    {
+        free(map);
+        return (NULL);
+    }
+    read_map_lines(fd, map, &i);
+    return (pad_map(map));
+}
+
+/*
+** Map size and border checks.
+*/
+void	map_size(t_data *data)
+{
+    int		h;
+    int		w;
+    int		i;
+    char	**map;
+
+    h = 0;
+    i = 0;
+    map = data->map.map;
+    while (map[i])
+    {
+        h++;
+        i++;
+    }
+    w = ft_strlen(map[0]);
+    data->map.height = h;
+    data->map.width = w;
+}
+
+int		check_top_bottom(char **map, int size)
+{
+    int	i;
+
+    i = 0;
     while (map[0][i])
     {
         if (map[0][i] != '1')
-            return 0;
+            return (0);
         i++;
     }
     i = 0;
     while (map[size - 1][i])
     {
         if (map[size - 1][i] != '1')
-            return 0;
+            return (0);
         i++;
     }
-    return 1;
+    return (1);
 }
 
-int check_borders(char **map)
+int		check_borders(char **map)
 {
-    int i;
-    int len;
-    int size_map = 0;
+    int	i;
+    int	len;
+    int	size_map;
 
+    size_map = 0;
     while (map[size_map])
         size_map++;
-    
     if (!check_top_bottom(map, size_map))
-        return 0;
-    
-    for (i = 1; i < size_map - 1; i++)
+        return (0);
+    i = 1;
+    while (i < size_map - 1)
     {
         len = ft_strlen(map[i]);
         if (map[i][0] != '1' || map[i][len - 1] != '1')
-            return 0;
+            return (0);
+        i++;
     }
-    return 1;
+    return (1);
 }
 
-int valid_map(char **map)
+int		valid_map(char **map)
 {
-    if (check_borders(map))
-        return 1;
-    return 0;
+    return (check_borders(map));
 }
 
-int main(int argc, char **argv)
+/*
+** Set player data after the map has been loaded.
+*/
+void	set_player_data(t_data *data)
 {
-    int fd;
-    char **map;
-    t_data data;
-    int i;
+    int	i;
+    int	j;
+
+    i = 0;
+    while (data->map.map[i])
+    {
+        j = 0;
+        while (data->map.map[i][j])
+        {
+            if (data->map.map[i][j] == 'N' || data->map.map[i][j] == 'S'
+                || data->map.map[i][j] == 'E' || data->map.map[i][j] == 'W')
+            {
+                data->player.pos_x = j;
+                data->player.pos_y = i;
+                if (data->map.map[i][j] == 'N')
+                    data->player.angle = 3 * M_PI / 2;
+                else if (data->map.map[i][j] == 'S')
+                    data->player.angle = M_PI / 2;
+                else if (data->map.map[i][j] == 'E')
+                    data->player.angle = 0;
+                else if (data->map.map[i][j] == 'W')
+                    data->player.angle = M_PI;
+                data->map.map[i][j] = '0';
+                return ;
+            }
+            j++;
+        }
+        i++;
+    }
+}
+
+/*
+** Main entry point - remains under 25 lines.
+*/
+int		main(int argc, char **argv)
+{
+    int		fd;
+    char	**map;
+    t_data	data;
+    int		i;
 
     if (argc != 2)
     {
         fprintf(stderr, "Usage: %s map.cub\n", argv[0]);
-        return 1;
+        return (1);
+    }
+    if (!check_extension(argv[1]))
+    {
+        fprintf(stderr, "Error: File must have a .cub extension\n");
+        return (1);
     }
     fd = open(argv[1], O_RDONLY);
     if (fd < 0)
     {
         perror("open");
-        return 1;
+        return (1);
     }
-    map = save_map(fd);
-    data.map = map;
+    map = read_cub_file(fd, &data);
+    data.map.map = map;
     close(fd);
     if (!map)
     {
         fprintf(stderr, "Failed to load map\n");
-        return 1;
+        return (1);
     }
     if (!valid_map(map))
     {
         fprintf(stderr, "Invalid map format\n");
-        return 1;
+        return (1);
     }
+    set_player_data(&data);
+    map_size(&data);
     printf("Map is valid.\n");
-
+    printf("Player position: (%f, %f)  Angle: %f\n",
+        data.player.pos_x, data.player.pos_y, data.player.angle);
     i = 0;
     while (map[i])
     {
@@ -238,6 +430,9 @@ int main(int argc, char **argv)
         free(map[i]);
         i++;
     }
+    printf("Map height: %d  width: %d\n", data.map.height, data.map.width);
+    printf("Ceiling color: %06X  Floor color: %06X\n",
+        data.textures.ceil_color, data.textures.floor_color);
     free(map);
-    return 0;
+    return (0);
 }
