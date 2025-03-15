@@ -1,9 +1,8 @@
 NAME = cub3d
 CC = gcc
-//CFLAGS = -Wall -Wextra -Werror
 MLX = -lmlx -lXext -lX11 -lm
 
-SRCS = main.c  draw.c  hook.c utlis.c draw_line.c draw_rays.c
+SRCS = main.c  init.c intr.c  player.c util.c cast_ray.c draw.c exit.c handel_key.c 
 OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)

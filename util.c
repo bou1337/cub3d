@@ -48,14 +48,24 @@ char **ft_split(const char *s, char c)
     return (split);
 }
 
-void normalize_angl(double *angl) {
-    int k  ;
 
-    k = *angl/(2*M_PI) ;
+double	normalize_angle(double angle_tofix)
+{
+	double	angle;
 
-    *angl  = *angl - k*(2*M_PI) ;
+	angle = fmod(angle_tofix, 2 * M_PI);
+	if (angle < 0)
+		angle += 2 * M_PI;
+	return (angle);
+}
 
-    if(*angl<0)
-    *angl =  *angl +2*M_PI ;
 
+void	*ft_memset(void *s, int c, size_t n)
+{
+	unsigned char	*p;
+
+	p = (unsigned char *)s;
+	while (n--)
+		*p++ = (unsigned char)c;
+	return (s);
 }
