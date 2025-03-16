@@ -1,8 +1,8 @@
 #include "cub3d.h"
 
-t_intersection find_horizontal_wall_intersection(t_data *data, int i)
+t_intr find_horizontal_wall_intersection(t_data *data, int i)
 {
-	t_intersection	h_inter;
+	t_intr	h_inter;
 	t_step			step;
 	int				pixel;
 
@@ -28,9 +28,9 @@ t_intersection find_horizontal_wall_intersection(t_data *data, int i)
 	return (h_inter);
 }
 
-t_intersection find_vertical_wall_intersection(t_data *data, int i)
+t_intr find_vertical_wall_intersection(t_data *data, int i)
 {
-    t_intersection	v_inter;
+    t_intr	v;
 	t_step			step;
 	int				pixel;
 
@@ -41,19 +41,19 @@ t_intersection find_vertical_wall_intersection(t_data *data, int i)
 	if ((data->rays[i].is_facing_up && step.y > 0)
 		|| (!data->rays[i].is_facing_up && step.y < 0))
 		step.y *= -1;
-	v_inter.x = floor(data->player.pos_x / data->screen.obj_size)
+	v.x = floor(data->player.pos_x / data->screen.obj_size)
 		* data->screen.obj_size;
-	pixel = inter_check(data, i, &v_inter.x, 0);
-	v_inter.y = data->player.pos_y + ((v_inter.x - data->player.pos_x)
+	pixel = inter_check(data, i, &v.x, 0);
+	v.y = data->player.pos_y + ((v.x - data->player.pos_x)
 			* tan(data->rays[i].ray_angle));
-	while (player_inside_map(data, v_inter.x + pixel, v_inter.y))
+	while (player_inside_map(data, v.x + pixel, v.y))
 	{
-		v_inter.x += step.x;
-		v_inter.y += step.y;
+		v.x += step.x;
+		v.y += step.y;
 	}
-	v_inter.distance = get_distance_between(data->player.pos_x,
-			data->player.pos_y, v_inter.x, v_inter.y);
-	return (v_inter);
+	v.distance = get_distance_between(data->player.pos_x,
+			data->player.pos_y, v.x, v.y);
+	return (v);
 }
 
 int inter_check(t_data *data, int idx, double *inter, int is_horizon)

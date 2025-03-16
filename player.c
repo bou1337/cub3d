@@ -29,7 +29,7 @@ int	update_player(t_data *data)
 
 int move_forward_backward(t_data *data, double *new_x, double *new_y)
 {
-    double move_speed = 3.0; // Adjust speed as needed
+    double move_speed = 3.0; 
     
     if (data->player.move_forward == 1)
     {
@@ -42,7 +42,6 @@ int move_forward_backward(t_data *data, double *new_x, double *new_y)
         *new_y = data->player.pos_y - sin(data->player.angle) * move_speed;
     }
     
-    // Check collision with a small buffer
     if (!player_inside_map(data, *new_x, *new_y))
     {
         *new_x = data->player.pos_x;
@@ -53,7 +52,7 @@ int move_forward_backward(t_data *data, double *new_x, double *new_y)
 
 int move_right_left(t_data *data, double *new_x, double *new_y)
 {
-    double move_speed = 3.0; // Adjust speed as needed
+    double move_speed = 3.0; 
     
     if (data->player.move_right == 1)
     {
@@ -65,8 +64,7 @@ int move_right_left(t_data *data, double *new_x, double *new_y)
         *new_x = data->player.pos_x + cos(data->player.angle - (M_PI/2)) * move_speed;
         *new_y = data->player.pos_y + sin(data->player.angle - (M_PI/2)) * move_speed;
     }
-    
-    // Check collision with a small buffer
+
     if (!player_inside_map(data, *new_x, *new_y))
     {
         *new_x = data->player.pos_x;
@@ -80,7 +78,7 @@ double turn_right_left(t_data *data, int turn_right)
     double new_angle;
     new_angle = data->player.angle;
     if (turn_right)
-        new_angle += 0.1; // Using a smaller increment for smoother rotation
+        new_angle += 0.1; 
     else
         new_angle -= 0.1;
     new_angle = normalize_angle(new_angle); // Normalize the angle

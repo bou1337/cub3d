@@ -87,14 +87,6 @@ typedef struct s_intr
 	double		y;
 }				t_intr;
 
-
-
-typedef struct s_intersection
-{
-	double		distance;
-	double		x;
-	double		y;
-}				t_intersection;
 typedef struct s_screen
 {
 	double		width;
@@ -126,9 +118,9 @@ typedef struct s_data
 
 int  init_data(t_data *data)  ;
 
-t_intersection	find_horizontal_wall_intersection(t_data *data, int i)     ;
+t_intr	find_horizontal_wall_intersection(t_data *data, int i)     ;
 
-t_intersection	find_vertical_wall_intersection(t_data *data, int i)   ;
+t_intr	find_vertical_wall_intersection(t_data *data, int i)   ;
 
 int	inter_check(t_data *data, int idx, double *inter, int is_horizon)  ;
 int	pixel_in_screen(t_data *data, double x, double y)  ;
