@@ -6,15 +6,15 @@ t_intr find_horizontal_wall_intersection(t_data *data, int i)
 	t_step			step;
 	int				pixel;
 
-	step.y = data->screen.obj_size;
+	step.y = data->screen.size;
 	step.x = step.y / tan(data->rays[i].ray_angle);
 	if (data->rays[i].is_facing_up)
 		step.y *= -1;
 	if ((data->rays[i].is_facing_right && step.x < 0)
 		|| (!data->rays[i].is_facing_right && step.x > 0))
 		step.x *= -1;
-	h_inter.y = floor(data->player.pos_y / data->screen.obj_size)
-		* data->screen.obj_size;
+	h_inter.y = floor(data->player.pos_y / data->screen.size)
+		* data->screen.size;
 	pixel = inter_check(data, i, &h_inter.y, 1);
 	h_inter.x = data->player.pos_x + ((h_inter.y - data->player.pos_y)
 			/ tan(data->rays[i].ray_angle));
@@ -34,15 +34,15 @@ t_intr find_vertical_wall_intersection(t_data *data, int i)
 	t_step			step;
 	int				pixel;
 
-	step.x = data->screen.obj_size;
+	step.x = data->screen.size;
 	step.y = step.x * tan(data->rays[i].ray_angle);
 	if (!data->rays[i].is_facing_right)
 		step.x *= -1;
 	if ((data->rays[i].is_facing_up && step.y > 0)
 		|| (!data->rays[i].is_facing_up && step.y < 0))
 		step.y *= -1;
-	v.x = floor(data->player.pos_x / data->screen.obj_size)
-		* data->screen.obj_size;
+	v.x = floor(data->player.pos_x / data->screen.size)
+		* data->screen.size;
 	pixel = inter_check(data, i, &v.x, 0);
 	v.y = data->player.pos_y + ((v.x - data->player.pos_x)
 			* tan(data->rays[i].ray_angle));
@@ -62,7 +62,7 @@ int inter_check(t_data *data, int idx, double *inter, int is_horizon)
 	{
 		if (!data->rays[idx].is_facing_up)
 		{
-			*inter += data->screen.obj_size;
+			*inter += data->screen.size;
 			return (1);
 		}
 	}
@@ -70,7 +70,7 @@ int inter_check(t_data *data, int idx, double *inter, int is_horizon)
 	{
 		if (data->rays[idx].is_facing_right)
 		{
-			*inter += data->screen.obj_size;
+			*inter += data->screen.size;
 			return (1);
 		}
 	}
@@ -94,8 +94,8 @@ int player_inside_map(t_data *data, double player_x, double player_y)
 
 	if (!pixel_inside_map(data, player_x, player_y))
 		return (0);
-	i = (int)(player_y / data->screen.obj_size);
-	j = (int)(player_x / data->screen.obj_size);
+	i = (int)(player_y / data->screen.size);
+	j = (int)(player_x / data->screen.size);
 	return (data->map.map[i][j] != '1');
 }
 
