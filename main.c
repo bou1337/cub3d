@@ -57,15 +57,15 @@ char *map_string =
             data->textures_path[3] ="./textures/c.xpm";
             data->screen.height = 1000;
 	        data->screen.width = 1900;
-	        data->screen.obj_size = 8;
+	        data->screen.size = 8;
             data->player.move_forward = 0;
 	        data->player.move_right = 0;
 	        data->player.turn_right = 0;
 	        data->player.fov = 60 * (PI / 180);
 	        data->player.move_speed = 0.9;
 	        data->player.turn_speed = 2.5;
-	        data->player.pos_x *= data->screen.obj_size;
-	        data->player.pos_y *= data->screen.obj_size;
+	        data->player.pos_x *= data->screen.size;
+	        data->player.pos_y *= data->screen.size;
             
             data->rays = malloc(sizeof(t_ray) * 1900);
             if (!data->rays)

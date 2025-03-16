@@ -83,10 +83,10 @@ int	put_pixel_to_pixel(t_data *data, t_img *img, int x, int y)
 	if (!pixel_in_screen(data, x, y))
 		return (1);
 	if (data->rays[x].hit_vertical)
-		offset_x = (int)((data->rays[x].hit_y / data->screen.obj_size) * img->w)
+		offset_x = (int)((data->rays[x].hit_y / data->screen.size) * img->w)
 			% img->w;
 	else
-		offset_x = (int)((data->rays[x].hit_x / data->screen.obj_size) * img->w)
+		offset_x = (int)((data->rays[x].hit_x / data->screen.size) * img->w)
 			% img->w;
 	offset_y = ((y - data->rays[x].r_top_y) * img->h) / data->rays[x].wall_h;
 	offset_y = offset_y % img->h;
@@ -128,8 +128,8 @@ int pixel_inside_map(t_data *data, double x, double y)
 
     if (x < 0 || y < 0)
         return (0);
-    j = (int)(x / data->screen.obj_size);
-    i = (int)(y / data->screen.obj_size);
+    j = (int)(x / data->screen.size);
+    i = (int)(y / data->screen.size);
     if (i < 0 || i >= data->map.height)
         return (0);
     if (j < 0 || j >= data->map.width)

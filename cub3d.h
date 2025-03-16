@@ -91,7 +91,7 @@ typedef struct s_screen
 {
 	double		width;
 	double		height;
-	double		obj_size;
+	double		size;
 }				t_screen;
 
 
