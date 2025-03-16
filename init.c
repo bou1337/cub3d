@@ -14,60 +14,48 @@ static int	init_img(t_data *data)
 }
 static int	load_east_and_west_textures(t_data *data)
 {
-	// Load East texture
 	data->textures.east.img = mlx_xpm_file_to_image(data->mlx,
 			data->textures_path[EA], &data->textures.east.w,
 			&data->textures.east.h);
-	if (!data->textures.east.img) // Check if loading failed
+	if (!data->textures.east.img)
 		return (1);
-	// Get East texture image data
 	data->textures.east.addr = mlx_get_data_addr(data->textures.east.img,
 			&data->textures.east.bpp, &data->textures.east.line,
 			&data->textures.east.endian);
-
-	// Load West texture
 	data->textures.west.img = mlx_xpm_file_to_image(data->mlx,
 			data->textures_path[WE], &data->textures.west.w,
 			&data->textures.west.h);
-	if (!data->textures.west.img) // Check if loading failed
+	if (!data->textures.west.img)
 		return (1);
-	// Get West texture image data
 	data->textures.west.addr = mlx_get_data_addr(data->textures.west.img,
 			&data->textures.west.bpp, &data->textures.west.line,
 			&data->textures.west.endian);
-
-	return (0); // Success
+	return (0);
 }
 
 static int	load_all_textures(t_data *data)
 {
+	
 	int	ret;
 
-	// Load North texture
 	data->textures.north.img = mlx_xpm_file_to_image(data->mlx,
 			data->textures_path[NO], &data->textures.north.w,
 			&data->textures.north.h);
-	if (!data->textures.north.img) // Check if loading failed
+	if (!data->textures.north.img)
 		return (1);
-	// Get North texture image data
 	data->textures.north.addr = mlx_get_data_addr(data->textures.north.img,
 			&data->textures.north.bpp, &data->textures.north.line,
 			&data->textures.north.endian);
-
-	// Load South texture
 	data->textures.south.img = mlx_xpm_file_to_image(data->mlx,
 			data->textures_path[SO], &data->textures.south.w,
 			&data->textures.south.h);
-	if (!data->textures.south.img) // Check if loading failed
+	if (!data->textures.south.img)
 		return (1);
-	// Get South texture image data
 	data->textures.south.addr = mlx_get_data_addr(data->textures.south.img,
 			&data->textures.south.bpp, &data->textures.south.line,
 			&data->textures.south.endian);
-
-	// Load East and West textures
 	ret = load_east_and_west_textures(data);
-	return (ret); // Return success or failure
+	return (ret);
 }
 
 

@@ -9,7 +9,8 @@
 #include <math.h>
 #include <stdlib.h>
 # include <unistd.h>
-#define  SIZE   8    
+
+# define PI 3.14159265358   
 # define NO 0
 # define SO 1
 # define WE 2
@@ -46,12 +47,16 @@ typedef struct s_player
 {
 	double		pos_x;
 	double		pos_y;
+
 	int			player_dir;
+
 	double		angle;
 	double		fov;
 	int			move_forward;
 	int			move_right;
 	int			turn_right;
+	double		move_speed;
+	double		turn_speed;
 }t_player ;
 
 
@@ -67,9 +72,6 @@ typedef struct s_textures
 
 typedef struct s_map
 {
-	int			*map_line_len;
-	int			map_start;
-	int			fd;
 	char		**map;
 	int			height;
 	int			width;
@@ -85,24 +87,37 @@ typedef struct s_intr
 	double		y;
 }				t_intr;
 
-typedef struct s_incr
+
+
+typedef struct s_intersection
+{
+	double		distance;
+	double		x;
+	double		y;
+}				t_intersection;
+typedef struct s_screen
+{
+	double		width;
+	double		height;
+	double		obj_size;
+}				t_screen;
+
+
+typedef struct s_step
 {
 	double		x;
 	double		y;
-}				t_incr;
+}				t_step;
 
 typedef struct s_data
 {
 	void		*mlx;
 	void		*win;
-	char		**lines;
-	int			textures_found;
-	int			colors_found;
 	char		*textures_path[4];
-	char		*trimmed;
 	t_img		img;
 	t_img		*texture[4];
 	t_map		map;
+	t_screen    screen ;
 	t_textures	textures;
 	t_player	player;
 	t_ray		*rays;
@@ -111,9 +126,9 @@ typedef struct s_data
 
 int  init_data(t_data *data)  ;
 
-t_intr	find_horizontal_wall_intersection(t_data *data, int i)     ;
+t_intersection	find_horizontal_wall_intersection(t_data *data, int i)     ;
 
-t_intr	find_vertical_wall_intersection(t_data *data, int i)   ;
+t_intersection	find_vertical_wall_intersection(t_data *data, int i)   ;
 
 int	inter_check(t_data *data, int idx, double *inter, int is_horizon)  ;
 int	pixel_in_screen(t_data *data, double x, double y)  ;
