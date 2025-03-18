@@ -1,25 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   map.c                                              :+:      :+:    :+:   */
+/*   check.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hfazaz <hfazaz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 17:46:27 by hfazaz            #+#    #+#             */
-/*   Updated: 2025/03/13 23:22:37 by hfazaz           ###   ########.fr       */
+/*   Updated: 2025/03/18 19:40:10 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
-#include <fcntl.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <math.h>
 
-/*
-** Basic helper functions
-*/
 int		ft_strlen(char *str)
 {
     int	i;
@@ -37,10 +29,10 @@ int		check_extension(const char *filename)
     len = ft_strlen((char *)filename);
     if (len < 4)
         return (0);
-    if (filename[len - 4] == '.' && filename[len - 3] == 'c' &&
-        filename[len - 2] == 'u' && filename[len - 1] == 'b')
-        return (1);
-    return (0);
+    if (filename[len - 4] != '.' || filename[len - 3] != 'c'
+        || filename[len - 2] != 'u' || filename[len - 1] != 'b')
+        return (0);
+    return (1);
 }
 
 char	*get_line(int fd)
@@ -88,9 +80,7 @@ int		is_map_line(char *line)
     return (1);
 }
 
-/*
-** pad_map helpers: get_max_len and pad_line.
-*/
+
 static int	get_max_len(char **map)
 {
     int	i;
@@ -159,9 +149,6 @@ char	**pad_map(char **map)
     return (padded);
 }
 
-/*
-** Color parsing and integer conversion
-*/
 int		parse_int(const char *str, int *i)
 {
     int	num;
@@ -184,23 +171,28 @@ int		parse_int(const char *str, int *i)
     return (sign * num);
 }
 
-void	parse_color(char *line, int *r, int *g, int *b)
+int		parse_color(char *line, int *r, int *g, int *b)
 {
     int	i;
 
     i = 1;
     *r = parse_int(line, &i);
+    if (*r < 0 || *r > 255)
+        return (0);
     if (line[i] == ',')
         i++;
     *g = parse_int(line, &i);
+    if (*g < 0 || *g > 255)
+        return (0);
     if (line[i] == ',')
         i++;
     *b = parse_int(line, &i);
+    if (*b < 0 || *b > 255)
+        return (0);
+    return (1);
 }
 
-/*
-** Helpers to split read_cub_file into two parts.
-*/
+
 static int	read_config_lines(int fd, t_data *data, char **map, int *i)
 {
     char	*line;
@@ -212,13 +204,23 @@ static int	read_config_lines(int fd, t_data *data, char **map, int *i)
     {
         if (line[0] == 'C')
         {
-            parse_color(line, &r, &g, &b);
+            if (!parse_color(line, &r, &g, &b))
+            {
+                fprintf(stderr, "Error: Invalid ceiling color\n");
+                free(line);
+                return (0);
+            }
             data->textures.ceil_color = (r << 16) | (g << 8) | b;
             free(line);
         }
         else if (line[0] == 'F')
         {
-            parse_color(line, &r, &g, &b);
+            if (!parse_color(line, &r, &g, &b))
+            {
+                fprintf(stderr, "Error: Invalid floor color\n");
+                free(line);
+                return (0);
+            }
             data->textures.floor_color = (r << 16) | (g << 8) | b;
             free(line);
         }
@@ -251,9 +253,7 @@ static void	read_map_lines(int fd, char **map, int *i)
     map[*i] = NULL;
 }
 
-/*
-** Main file reading function, now split into smaller helpers.
-*/
+
 char	**read_cub_file(int fd, t_data *data)
 {
     char	**map;
@@ -272,9 +272,6 @@ char	**read_cub_file(int fd, t_data *data)
     return (pad_map(map));
 }
 
-/*
-** Map size and border checks.
-*/
 void	map_size(t_data *data)
 {
     int		h;
@@ -343,9 +340,7 @@ int		valid_map(char **map)
     return (check_borders(map));
 }
 
-/*
-** Set player data after the map has been loaded.
-*/
+
 void	set_player_data(t_data *data)
 {
     int	i;
@@ -379,16 +374,52 @@ void	set_player_data(t_data *data)
     }
 }
 
-/*
-** Main entry point - remains under 25 lines.
-*/
-int		main(int argc, char **argv)
+
+static int	check_color_range(int color)
+{
+    int	r;
+    int	g;
+    int	b;
+
+    r = (color >> 16) & 0xFF;
+    g = (color >> 8) & 0xFF;
+    b = color & 0xFF;
+    if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255)
+        return (0);
+    return (1);
+}
+
+int	check_config_data(t_data *data)
+{
+    if (data->textures.ceil_color == -1 ||
+        data->textures.floor_color == -1)
+    {
+        fprintf(stderr,
+            "Error: Missing floor or ceiling color configuration\n");
+        return (0);
+    }
+    if (!check_color_range(data->textures.ceil_color))
+    {
+        fprintf(stderr, "Error: Ceiling color invalid\n");
+        return (0);
+    }
+    if (!check_color_range(data->textures.floor_color))
+    {
+        fprintf(stderr, "Error: Floor color invalid\n");
+        return (0);
+    }
+    return (1);
+}
+
+int	main(int argc, char **argv)
 {
     int		fd;
     char	**map;
     t_data	data;
     int		i;
 
+    data.textures.ceil_color = -1;
+    data.textures.floor_color = -1;
     if (argc != 2)
     {
         fprintf(stderr, "Usage: %s map.cub\n", argv[0]);
@@ -413,6 +444,8 @@ int		main(int argc, char **argv)
         fprintf(stderr, "Failed to load map\n");
         return (1);
     }
+    if (!check_config_data(&data))
+        return (1);
     if (!valid_map(map))
     {
         fprintf(stderr, "Invalid map format\n");
@@ -421,8 +454,8 @@ int		main(int argc, char **argv)
     set_player_data(&data);
     map_size(&data);
     printf("Map is valid.\n");
-    printf("Player position: (%f, %f)  Angle: %f\n",
-        data.player.pos_x, data.player.pos_y, data.player.angle);
+    printf("Player position: (%f, %f)  Angle: %f\n", data.player.pos_x, \
+data.player.pos_y, data.player.angle);
     i = 0;
     while (map[i])
     {
@@ -431,8 +464,8 @@ int		main(int argc, char **argv)
         i++;
     }
     printf("Map height: %d  width: %d\n", data.map.height, data.map.width);
-    printf("Ceiling color: %06X  Floor color: %06X\n",
-        data.textures.ceil_color, data.textures.floor_color);
+    printf("Ceiling color: %06X  Floor color: %06X\n", data.textures.ceil_color, \
+data.textures.floor_color);
     free(map);
     return (0);
 }
