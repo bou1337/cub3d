@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   check.c                                            :+:      :+:    :+:   */
+/*   map.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hfazaz <hfazaz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 17:46:27 by hfazaz            #+#    #+#             */
-/*   Updated: 2025/03/18 19:40:10 by codespace        ###   ########.fr       */
+/*   Updated: 2025/03/19 03:35:35 by hfazaz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,7 +174,7 @@ int		parse_int(const char *str, int *i)
 int		parse_color(char *line, int *r, int *g, int *b)
 {
     int	i;
-
+    
     i = 1;
     *r = parse_int(line, &i);
     if (*r < 0 || *r > 255)
@@ -193,6 +193,50 @@ int		parse_color(char *line, int *r, int *g, int *b)
 }
 
 
+
+
+ char *extract_path(t_data *data, char *line)
+{
+    int  i;
+    int  start;
+    char *path;
+    int  fd;
+
+    start = 2;
+    while (line[start] && line[start] == ' ')
+        start++;
+    i = start;
+    while (line[i] && line[i] != ' ')
+        i++;
+    if (i == start)
+        return (0);
+    path = malloc(sizeof(char) * (i - start + 1));
+    if (!path)
+        return (0);
+    i = 0;
+    while (line[start] && line[start] != ' ')
+    {
+        path[i] = line[start];
+        i++;
+        start++;
+    }
+    path[i] = '\0';
+    return path;
+}
+
+static int is_texture(t_data *data, char *line)
+{
+    if(line[0] == 'N' && line[1] == 'O')
+        data->textures_path[0] = extract_path(data, line);
+    else if(line[0] == 'S' && line[1] == 'O')
+        data->textures_path[2] = extract_path(data, line);
+    else if(line[0] == 'W' && line[1] == 'E')
+        data->textures_path[3] = extract_path(data, line);
+    else if(line[0] == 'E' && line[1] == 'A')
+        data->textures_path[1] = extract_path(data, line);
+    return (0);
+}
+
 static int	read_config_lines(int fd, t_data *data, char **map, int *i)
 {
     char	*line;
@@ -204,6 +248,7 @@ static int	read_config_lines(int fd, t_data *data, char **map, int *i)
     {
         if (line[0] == 'C')
         {
+            data->pos++;
             if (!parse_color(line, &r, &g, &b))
             {
                 fprintf(stderr, "Error: Invalid ceiling color\n");
@@ -215,6 +260,7 @@ static int	read_config_lines(int fd, t_data *data, char **map, int *i)
         }
         else if (line[0] == 'F')
         {
+            data->pos++;
             if (!parse_color(line, &r, &g, &b))
             {
                 fprintf(stderr, "Error: Invalid floor color\n");
@@ -224,8 +270,14 @@ static int	read_config_lines(int fd, t_data *data, char **map, int *i)
             data->textures.floor_color = (r << 16) | (g << 8) | b;
             free(line);
         }
+        else if(is_texture(data,line))
+        {
+            data->pos++;
+            
+        }
         else if (is_map_line(line))
         {
+            // data->pos++;
             map[*i] = line;
             (*i)++;
             return (1);
@@ -235,6 +287,7 @@ static int	read_config_lines(int fd, t_data *data, char **map, int *i)
     }
     return (0);
 }
+
 
 static void	read_map_lines(int fd, char **map, int *i)
 {
@@ -258,7 +311,8 @@ char	**read_cub_file(int fd, t_data *data)
 {
     char	**map;
     int		i;
-
+    
+    // data->pos = 0;
     i = 0;
     map = malloc(sizeof(char *) * 2147483647);
     if (!map)
@@ -387,8 +441,8 @@ static int	check_color_range(int color)
     if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255)
         return (0);
     return (1);
+  
 }
-
 int	check_config_data(t_data *data)
 {
     if (data->textures.ceil_color == -1 ||
@@ -410,6 +464,7 @@ int	check_config_data(t_data *data)
     }
     return (1);
 }
+
 
 int	main(int argc, char **argv)
 {
@@ -466,6 +521,7 @@ data.player.pos_y, data.player.angle);
     printf("Map height: %d  width: %d\n", data.map.height, data.map.width);
     printf("Ceiling color: %06X  Floor color: %06X\n", data.textures.ceil_color, \
 data.textures.floor_color);
+printf("NO: %s\nSO: %s\nWE: %s\nEA: %s\n", data.textures_path[0], data.textures_path[2], data.textures_path[3], data.textures_path[1]);
     free(map);
     return (0);
 }
