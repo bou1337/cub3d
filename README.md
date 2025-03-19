@@ -59,6 +59,12 @@ C 225,225,225
 111111
 ```
 
+## Resources
+Here are some useful resources for understanding raycasting and working with MinilibX:
+- [Lode's Computer Graphics Tutorial](https://lodev.org/cgtutor/raycasting.html) - A great introduction to raycasting.
+- [MinilibX Documentation](https://harm-smits.github.io/42docs/libs/minilibx) - Detailed documentation for the MinilibX library.
+- [42's Cub3D Subject](https://cdn.intra.42.fr/pdf/pdf/33324/en.subject.pdf) - Official project specifications.
+
 ## Acknowledgments
 This project is part of the 42 curriculum and follows the specified requirements.
 
@@ -66,6 +72,4 @@ This project is part of the 42 curriculum and follows the specified requirements
 This project is for educational purposes and follows 42's academic policies.
 
 ---
-
-Feel free to contribute or reach out if you have any questions!
 
