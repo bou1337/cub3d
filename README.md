@@ -68,8 +68,4 @@ Here are some useful resources for understanding raycasting and working with Min
 ## Acknowledgments
 This project is part of the 42 curriculum and follows the specified requirements.
 
-## License
-This project is for educational purposes and follows 42's academic policies.
-
----
 
