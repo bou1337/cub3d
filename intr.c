@@ -89,7 +89,7 @@ int player_inside_map(t_data *data, double player_x, double player_y)
 
     if (i < 0 || i >= data->map.height || j < 0 || j >= data->map.width)
         return 0;
-    return (data->map.map[i][j] != '1');
+    return (data->map.map[i][j] != '1' && data->map.map[i][j]!='2');
 }
 
 double	get_distance_between(double x1, double y1, double x2, double y2)
