@@ -63,7 +63,7 @@ char *map_string =
 	        data->player.turn_right = 0;
 	        data->player.fov = 60 * (PI / 180);
 	        data->player.move_speed = 1;
-	        data->player.turn_speed = 1;
+	        data->player.turn_speed = 1.4;
 	        data->player.pos_x *= data->screen.size;
 	        data->player.pos_y *= data->screen.size;
             

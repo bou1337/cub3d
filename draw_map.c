@@ -50,7 +50,7 @@ void draw_line(t_data *data , double x0 , double y0 , double x1, double y1)
     double dx ;
     double dy ;
     int i ; 
-    
+
     i = 0 ;
     dx = x1 -x0 ;
     dy = y1 -y0 ;
@@ -79,6 +79,9 @@ void  mini_map(t_data *data)
 
     int i = -1  ;
 	draw_mapp(data) ;
+    put_color_to_pixel(data,data->player.pos_x ,data->player.pos_y,0xFF0000) ;
+    put_color_to_pixel(data,data->player.pos_x+1 ,data->player.pos_y,0xFF0000)  ;
+    put_color_to_pixel(data,data->player.pos_x ,data->player.pos_y+1,0xFF0000) ;
 	while (data->rays && ++i < data->screen.width)
 	{       
 			draw_line(data ,data->player.pos_x,data->player.pos_y,data->rays[i].hit_x,data->rays[i].hit_y) ;
