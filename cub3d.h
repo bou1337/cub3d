@@ -9,6 +9,7 @@
 #include <math.h>
 #include <stdlib.h>
 # include <unistd.h>
+#include <stdio.h> // For fprintf
 
 # define PI 3.14159265358   
 # define NO 0
