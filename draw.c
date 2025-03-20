@@ -49,7 +49,7 @@ int	draw_ray(t_data *data, int x)
 int	draw_column(t_data *data, int x)
 {
 	int	y;
-
+	
 	y = -1;
 	while (++y <= data->rays[x].top_y)
 		put_color_to_pixel(data, x, y, data->textures.ceil_color);

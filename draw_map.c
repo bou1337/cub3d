@@ -35,7 +35,7 @@ void draw_mapp(t_data *data)
         {
             if (data->map.map[i][j] == '1')
                 draw_rect(data, j, i, 0x0000FF); 
-            else
+            else if (data->map.map[i][j] == '0')
                 draw_rect(data, j, i, 0xFFFFFF);
                 j++ ; 
         }
