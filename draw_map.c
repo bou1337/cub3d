@@ -73,3 +73,16 @@ void draw_line(t_data *data , double x0 , double y0 , double x1, double y1)
     }
 
 }
+
+void  mini_map(t_data *data)
+{
+
+    int i = -1  ;
+	draw_mapp(data) ;
+	while (data->rays && ++i < data->screen.width)
+	{       
+			draw_line(data ,data->player.pos_x,data->player.pos_y,data->rays[i].hit_x,data->rays[i].hit_y) ;
+
+
+	}
+}

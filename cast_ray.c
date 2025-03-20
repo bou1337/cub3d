@@ -20,14 +20,7 @@ int cast_rays(t_data *data)
 		draw_ray(data, i);
 		angle += data->player.fov / data->screen.width;
 	}
-	i =-1 ;
-	draw_mapp(data) ;
-	while (data->rays && ++i < data->screen.width)
-	{       
-			draw_line(data ,data->player.pos_x,data->player.pos_y,data->rays[i].hit_x,data->rays[i].hit_y) ;
-
-
-	}
+	
 	return (0);
 }
 
