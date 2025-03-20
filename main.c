@@ -3,20 +3,20 @@
 char *map_string = 
         "11111111111111111111\n"
         "11000000000000000011\n"
-        "1--00000000000000001\n"
+        "12200000000000000001\n"
         "10000000000000000001\n"
-        "10000000011111111111\n"
+        "1111111111111111111\n"
         "12222222222222222211\n"
-        "10000000000002222001\n"
-        "10000000000002222001\n"
-        "10000000000000000001\n"
+        "11111111111112222101\n"
+        "10000000000012222101\n"
+        "10000000200000000001\n"
         "10000000000000111111\n"
         "10000000000000000001\n"
         "10000000000000000001\n"
         "10000000000000000001\n"
         "10000000001000000001\n"
-        "10000000000111111111\n"
-        "10000000000000000001\n"
+        "111111111111110000011\n"
+        "12222222222100000001\n"
         "11111111111100000001\n"
         "11000000000000000011\n"
         "11000000000000000011\n"
@@ -50,10 +50,10 @@ char *map_string =
             data->map.width = 20;
             data->textures.floor_color = 8543821 ;
             data->textures.ceil_color =0x87CEEB; 
-            data->textures_path[0] ="./textures/c.xpm";
-            data->textures_path[1] ="./textures/c.xpm";
-            data->textures_path[2] ="./textures/c.xpm";
-            data->textures_path[3] ="./textures/c.xpm";
+            data->textures_path[0] ="./textures/1.xpm";
+            data->textures_path[1] ="./textures/2.xpm";
+            data->textures_path[2] ="./textures/3.xpm";
+            data->textures_path[3] ="./textures/4.xpm";
             data->screen.height = 1000;
 	        data->screen.width = 1900;
 	        data->screen.size = 8;
