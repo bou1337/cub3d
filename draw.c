@@ -60,20 +60,15 @@ int	draw_column(t_data *data, int x)
 	return (0);
 }
 
-
 int	put_color_to_pixel(t_data *data, int x, int y, int col)
 {
 	
 	unsigned int	*pixel;
-
-	if (!pixel_in_screen(data, x, y))
-		return (1);
 	pixel = (unsigned int *)(data->img.addr + (y * data->img.line + x
 				* (data->img.bpp / 8)));
 	*pixel = col;
 	return (0);
 }
-
 
 int	put_pixel_to_pixel(t_data *data, t_img *img, int x, int y)
 {
@@ -82,8 +77,6 @@ int	put_pixel_to_pixel(t_data *data, t_img *img, int x, int y)
 	int				offset_x;
 	int				offset_y;
 
-	if (!pixel_in_screen(data, x, y))
-		return (1);
 	if (data->rays[x].hit_vertical)
 		offset_x = (int)((data->rays[x].hit_y / data->screen.size) * img->w)
 			% img->w;

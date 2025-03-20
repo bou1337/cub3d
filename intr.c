@@ -84,21 +84,20 @@ int	pixel_in_screen(t_data *data, double x, double y)
 		return (0);
 	return (1);
 }
-
-
 int player_inside_map(t_data *data, double player_x, double player_y)
 {
-   
-	int	i;
-	int	j;
+    int i;
+    int j;
 
-	if (!pixel_inside_map(data, player_x, player_y))
-		return (0);
-	i = (int)(player_y / data->screen.size);
-	j = (int)(player_x / data->screen.size);
-	return (data->map.map[i][j] != '1');
+    if (player_x < 0 || player_y < 0)
+        return 0;
+    j = (int)(player_x / data->screen.size);
+    i = (int)(player_y / data->screen.size);
+
+    if (i < 0 || i >= data->map.height || j < 0 || j >= data->map.width)
+        return 0;
+    return (data->map.map[i][j] != '1');
 }
-
 
 double	get_distance_between(double x1, double y1, double x2, double y2)
 {

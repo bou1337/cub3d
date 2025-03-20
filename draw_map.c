@@ -4,10 +4,10 @@
 
 void draw_rect(t_data *data, int x, int y, int color)
 {
-    int start_x = x *8;
-    int start_y = y * 8;
-    int end_x = start_x + 8;
-    int end_y = start_y + 8;
+    int start_x = x *data->screen.size;
+    int start_y = y * data->screen.size;
+    int end_x = start_x + data->screen.size;
+    int end_y = start_y + data->screen.size;
     int i ; 
     int j ;
     i = start_x ;
@@ -50,7 +50,7 @@ void draw_line(t_data *data , double x0 , double y0 , double x1, double y1)
     double dx ;
     double dy ;
     int i ; 
-
+    
     i = 0 ;
     dx = x1 -x0 ;
     dy = y1 -y0 ;
