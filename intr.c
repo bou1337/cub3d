@@ -76,14 +76,7 @@ int inter_check(t_data *data, int idx, double *inter, int is_horizon)
 	}
 	return (-1);
 }
-int	pixel_in_screen(t_data *data, double x, double y)
-{
-	if (x < 0 || y < 0)
-		return (0);
-	if (x > data->screen.width || y > data->screen.height)
-		return (0);
-	return (1);
-}
+
 int player_inside_map(t_data *data, double player_x, double player_y)
 {
     int i;

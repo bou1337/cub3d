@@ -117,19 +117,14 @@ typedef struct s_data
 
 }t_data;
 
-
-
 void draw_rect(t_data *data, int x, int y, int color) ;
 void draw_mapp(t_data *data) ;
 void draw_line(t_data *data , double x0 , double y0 , double x1, double y1);
 int  init_data(t_data *data)  ;
 void  mini_map(t_data *data) ;
 t_intr	find_horizontal_wall_intersection(t_data *data, int i)     ;
-
 t_intr	find_vertical_wall_intersection(t_data *data, int i)   ;
-
 int	inter_check(t_data *data, int idx, double *inter, int is_horizon)  ;
-int	pixel_in_screen(t_data *data, double x, double y)  ;
 int	player_inside_map(t_data *data, double player_x, double player_y)  ;
 int cast_rays(t_data *data)  ;
 int	determine_ray_intersection(t_data *data, int i)  ;
