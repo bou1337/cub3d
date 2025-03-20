@@ -54,7 +54,7 @@ int	draw_column(t_data *data, int x)
 	while (++y <= data->rays[x].top_y)
 		put_color_to_pixel(data, x, y, data->textures.ceil_color);
 	while (y <= data->rays[x].bottom_y)
-		put_pixel_to_pixel(data, get_img(data, x), x, y++);
+	put_color_to_pixel(data,x, y++,0xffffff) ;
 	while (y < data->screen.height)
 		put_color_to_pixel(data, x, y++, data->textures.floor_color);
 	return (0);

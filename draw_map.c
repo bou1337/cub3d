@@ -89,3 +89,16 @@ void  mini_map(t_data *data)
 
 	}
 }
+
+void colum(t_data *data, int x, int y)
+{
+    int wall_top = data->rays[x].top_y;    // Top of the wall slice
+    int wall_bottom = data->rays[x].bottom_y; // Bottom of the wall slice
+
+    // Draw the wall slice with a solid color (e.g., white)
+    while (y <= wall_bottom)
+    {
+        put_color_to_pixel(data, x, y, 0xFFFFFF); // 0xFFFFFF is white in hexadecimal
+        y++;
+    }
+}

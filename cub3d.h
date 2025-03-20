@@ -146,7 +146,6 @@ double	normalize_angle(double angle_tofix)  ;
 void	*ft_memset(void *s, int c, size_t n)  ;
 int	put_color_to_pixel(t_data *data, int x, int y, int col) ; 
 int	put_pixel_to_pixel(t_data *data, t_img *img, int x, int y) ;
-int	pixel_in_screen(t_data *data, double x, double y) ;
 t_img	*get_img(t_data *data, int i) ; 
 double	get_distance_between(double x1, double y1, double x2, double y2) ;
 int	pixel_inside_map(t_data *data, double x, double y) ;
