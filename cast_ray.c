@@ -7,6 +7,7 @@ int cast_rays(t_data *data)
 
 	angle = data->player.angle - (0.5 * data->player.fov);
 	i = -1;
+	
 	while (data->rays && ++i < data->screen.width)
 	{
 		angle = normalize_angle(angle);
@@ -15,6 +16,7 @@ int cast_rays(t_data *data)
 		data->rays[i].is_facing_right = angle < (0.5 * PI) || angle > (1.5
 				* PI);
 		determine_ray_intersection(data, i);
+		//draw_line(data ,data->player.pos_x,data->player.pos_y,data->rays[i].hit_x,data->rays[i].hit_y) ;
 		draw_ray(data, i);
 		angle += data->player.fov / data->screen.width;
 	}

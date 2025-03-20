@@ -42,8 +42,8 @@ char *map_string =
             
             data->player.pos_x = 10 ;
             data->player.pos_y = 10 ; 
-            data->player.angle = M_PI / 2; // Initialize player angle (facing north)
-            data->player.fov = M_PI / 3;    
+            data->player.angle = M_PI ; // Initialize player angle (facing north)
+            data->player.fov = M_PI/3 ;    
             data->player.move_forward = 0;  
             data->player.move_right = 0;
             data->player.turn_right = 0;
@@ -62,8 +62,8 @@ char *map_string =
 	        data->player.move_right = 0;
 	        data->player.turn_right = 0;
 	        data->player.fov = 60 * (PI / 180);
-	        data->player.move_speed = 0.9;
-	        data->player.turn_speed = 2.5;
+	        data->player.move_speed = 1;
+	        data->player.turn_speed = 1;
 	        data->player.pos_x *= data->screen.size;
 	        data->player.pos_y *= data->screen.size;
             

@@ -77,6 +77,5 @@ int  init_data(t_data *data)
     return 1 ;
     init_img(data) ;
 	load_all_textures(data) ;
-
     return 0;   
 }

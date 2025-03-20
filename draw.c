@@ -15,6 +15,7 @@ int	update_map(t_data *data)
 
 int	draw_map(t_data *data)
 {
+	//draw_mapp(data) ;
 	cast_rays(data);
 	mlx_put_image_to_window(data->mlx, data->win, data->img.img, 0, 0);
 	return (0);
