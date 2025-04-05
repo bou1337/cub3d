@@ -99,6 +99,9 @@ typedef struct s_data
 	int			colors_found;
 	char		*textures_path[4];
 	char		*trimmed;
+	int		texture_index;
+	int 		map_index;
+	int color_index;
 	t_img		img;
 	t_img		*texture[4];
 	t_map		map;

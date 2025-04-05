@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   map.c                                              :+:      :+:    :+:   */
+/*   check.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hfazaz <hfazaz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 17:46:27 by hfazaz            #+#    #+#             */
-/*   Updated: 2025/03/19 03:35:35 by hfazaz           ###   ########.fr       */
+/*   Updated: 2025/04/05 00:34:43 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int		ft_strlen(char *str)
+int	ft_strlen(char *str)
 {
     int	i;
 
@@ -22,7 +22,7 @@ int		ft_strlen(char *str)
     return (i);
 }
 
-int		check_extension(const char *filename)
+int	check_extension(const char *filename)
 {
     int	len;
 
@@ -41,7 +41,7 @@ char	*get_line(int fd)
     int		i;
 
     i = 0;
-    line = malloc(sizeof(char) * 2147483647);
+    line = malloc(sizeof(char) * 100);
     if (!line)
         return (NULL);
     while (read(fd, &line[i], 1))
@@ -62,24 +62,32 @@ char	*get_line(int fd)
     return (NULL);
 }
 
-int		is_map_line(char *line)
+int	is_valid_map_char(char c)
+{
+    return (c == ' ' || c == '0' || c == '1' || c == '2' || 
+        c == 'N' || c == 'S' || c == 'W' || c == 'E');
+}
+
+int	is_map_line(char *line)
 {
     int	i;
 
     i = 0;
     if (!line || !line[0])
         return (0);
+    while (line[i] == ' ')
+        i++;
+    if (!line[i])
+        return (0);
+    i = 0;
     while (line[i])
     {
-        if (line[i] != ' ' && line[i] != '0' && line[i] != '1'
-            && line[i] != '2' && line[i] != 'N' && line[i] != 'S'
-            && line[i] != 'W' && line[i] != 'E')
+        if (!is_valid_map_char(line[i]))
             return (0);
         i++;
     }
     return (1);
 }
-
 
 static int	get_max_len(char **map)
 {
@@ -99,57 +107,30 @@ static int	get_max_len(char **map)
     return (max);
 }
 
-static char	*pad_line(char *line, int max_len)
+static char	*pad_line(char *line)
 {
     int		i;
     int		len;
-    char	*new_line;
-    char	fill;
+    char	*padded;
 
     len = ft_strlen(line);
-    new_line = malloc(sizeof(char) * (max_len + 1));
-    if (!new_line)
-        return (NULL);
-    i = 0;
-    while (i < len)
-    {
-        new_line[i] = line[i];
-        i++;
-    }
-    fill = (line[len - 1] == '1') ? '1' : ' ';
-    while (i < max_len)
-        new_line[i++] = fill;
-    new_line[i] = '\0';
-    return (new_line);
-}
-
-char	**pad_map(char **map)
-{
-    int		i;
-    int		row;
-    int		max_len;
-    char	**padded;
-
-    row = 0;
-    while (map[row])
-        row++;
-    max_len = get_max_len(map);
-    padded = malloc(sizeof(char *) * (row + 1));
+    padded = malloc(sizeof(char) * (len + 1));
     if (!padded)
         return (NULL);
     i = 0;
-    while (i < row)
+    while (line[i])
     {
-        padded[i] = pad_line(map[i], max_len);
-        if (!padded[i])
-            return (NULL);
+        if (line[i] == ' ')
+            padded[i] = '2';
+        else
+            padded[i] = line[i];
         i++;
     }
-    padded[i] = NULL;
+    padded[i] = '\0';
     return (padded);
 }
 
-int		parse_int(const char *str, int *i)
+int	parse_int(const char *str, int *i)
 {
     int	num;
     int	sign;
@@ -171,10 +152,10 @@ int		parse_int(const char *str, int *i)
     return (sign * num);
 }
 
-int		parse_color(char *line, int *r, int *g, int *b)
+int	parse_color(char *line, int *r, int *g, int *b)
 {
     int	i;
-    
+
     i = 1;
     *r = parse_int(line, &i);
     if (*r < 0 || *r > 255)
@@ -192,15 +173,11 @@ int		parse_color(char *line, int *r, int *g, int *b)
     return (1);
 }
 
-
-
-
- char *extract_path(t_data *data, char *line)
+char	*extract_path(t_data *data, char *line)
 {
-    int  i;
-    int  start;
-    char *path;
-    int  fd;
+    int		i;
+    int		start;
+    char	*path;
 
     start = 2;
     while (line[start] && line[start] == ' ')
@@ -221,100 +198,140 @@ int		parse_color(char *line, int *r, int *g, int *b)
         start++;
     }
     path[i] = '\0';
-    return path;
+    return (path);
 }
 
-static int is_texture(t_data *data, char *line)
+static int	is_texture(t_data *data, char *line)
 {
-    if(line[0] == 'N' && line[1] == 'O')
+    if (line[0] == 'N' && line[1] == 'O')
         data->textures_path[0] = extract_path(data, line);
-    else if(line[0] == 'S' && line[1] == 'O')
+    else if (line[0] == 'S' && line[1] == 'O')
         data->textures_path[2] = extract_path(data, line);
-    else if(line[0] == 'W' && line[1] == 'E')
+    else if (line[0] == 'W' && line[1] == 'E')
         data->textures_path[3] = extract_path(data, line);
-    else if(line[0] == 'E' && line[1] == 'A')
+    else if (line[0] == 'E' && line[1] == 'A')
         data->textures_path[1] = extract_path(data, line);
-    return (0);
+    else
+        return (0);
+    return (1);
+}
+
+static int	handle_colors(t_data *data, char *line)
+{
+    int	r;
+    int	g;
+    int	b;
+
+    if (!parse_color(line + 1, &r, &g, &b))
+    {
+        fprintf(stderr, "Error: Invalid color\n");
+        free(line);
+        return (0);
+    }
+    if (line[0] == 'C')
+        data->textures.ceil_color = (r << 16) | (g << 8) | b;
+    else
+        data->textures.floor_color = (r << 16) | (g << 8) | b;
+    data->color_index = 1;
+    free(line);
+    return (1);
+}
+
+static int	handle_map_line(char *line, t_data *data, char **map, int *i)
+{
+    char	*padded_line;
+
+    if (data->color_index == 0 || data->texture_index == 0)
+    {
+        fprintf(stderr, "Map should be at the end of file\n");
+        free(line);
+        return (0);
+    }
+    padded_line = pad_line(line);
+    free(line);
+    if (!padded_line)
+        return (0);
+    map[*i] = padded_line;
+    (*i)++;
+    return (1);
+}
+
+static int	process_config_line(char *line, t_data *data, char **map, int *i)
+{
+    if (line[0] == 'C' || line[0] == 'F')
+        return (handle_colors(data, line));
+    else if (is_texture(data, line))
+    {
+        data->texture_index = 1;
+        return (1);
+    }
+    else if (is_map_line(line))
+        return (handle_map_line(line, data, map, i));
+    else
+    {
+        free(line);
+        return (1);
+    }
 }
 
 static int	read_config_lines(int fd, t_data *data, char **map, int *i)
 {
     char	*line;
-    int		r;
-    int		g;
-    int		b;
 
     while ((line = get_line(fd)))
     {
-        if (line[0] == 'C')
-        {
-            data->pos++;
-            if (!parse_color(line, &r, &g, &b))
-            {
-                fprintf(stderr, "Error: Invalid ceiling color\n");
-                free(line);
-                return (0);
-            }
-            data->textures.ceil_color = (r << 16) | (g << 8) | b;
-            free(line);
-        }
-        else if (line[0] == 'F')
-        {
-            data->pos++;
-            if (!parse_color(line, &r, &g, &b))
-            {
-                fprintf(stderr, "Error: Invalid floor color\n");
-                free(line);
-                return (0);
-            }
-            data->textures.floor_color = (r << 16) | (g << 8) | b;
-            free(line);
-        }
-        else if(is_texture(data,line))
-        {
-            data->pos++;
-            
-        }
-        else if (is_map_line(line))
-        {
-            // data->pos++;
-            map[*i] = line;
-            (*i)++;
+        if (!process_config_line(line, data, map, i))
+            return (0);
+        if (*i > 0)
             return (1);
-        }
-        else
-            free(line);
     }
     return (0);
 }
 
-
-static void	read_map_lines(int fd, char **map, int *i)
+static void read_map_lines(int fd, char **map, int *i)
 {
-    char	*line;
+    char *line;
 
     while ((line = get_line(fd)))
     {
         if (!is_map_line(line))
         {
             free(line);
-            break ;
+            break;
         }
+        line = pad_line(line);
         map[*i] = line;
         (*i)++;
     }
     map[*i] = NULL;
 }
 
-
-char	**read_cub_file(int fd, t_data *data)
+int map_len(int fd)
 {
-    char	**map;
-    int		i;
-    
-    // data->pos = 0;
+    int len;
+    char *line;
+
+    len = 0;
+    while ((line = get_line(fd)))
+    {
+        if (is_map_line(line))
+        {
+            len++;
+        }
+        free(line);
+    }
+    return len;
+}
+
+char **read_cub_file(int fd, t_data *data)
+{
+    char **map;
+    int i;
+
     i = 0;
-    map = malloc(sizeof(char *) * 2147483647);
+    map = malloc(sizeof(char *) * (map_len(fd) + 1));
+    close(fd);
+    fd = open("map.cub", O_RDONLY);
     if (!map)
         return (NULL);
     if (!read_config_lines(fd, data, map, &i))
@@ -323,15 +340,15 @@ char	**read_cub_file(int fd, t_data *data)
         return (NULL);
     }
     read_map_lines(fd, map, &i);
-    return (pad_map(map));
+    return (map);
 }
 
-void	map_size(t_data *data)
+void map_size(t_data *data)
 {
-    int		h;
-    int		w;
-    int		i;
-    char	**map;
+    int h;
+    int w;
+    int i;
+    char **map;
 
     h = 0;
     i = 0;
@@ -346,38 +363,43 @@ void	map_size(t_data *data)
     data->map.width = w;
 }
 
-int		check_top_bottom(char **map, int size)
+int check_top_bottom(char **map)
 {
-    int	i;
-
+    int i;
+    int j;
+    
     i = 0;
-    while (map[0][i])
+    
+    while (map[i][j])
     {
-        if (map[0][i] != '1')
-            return (0);
-        i++;
+        j = 0;
+       if(map[i][j] == 2 )
+       {
+            while(map[i][j])
+            {
+                if(map[i++][j] == '0' || map[i++][j] == '2')
+                    continue;
+                if(!map)
+                    return 0;
+                else 
+                    return 1;
+            }
+       }
     }
-    i = 0;
-    while (map[size - 1][i])
-    {
-        if (map[size - 1][i] != '1')
-            return (0);
-        i++;
-    }
-    return (1);
+    return 0;
 }
 
-int		check_borders(char **map)
+int check_borders(char **map)
 {
-    int	i;
-    int	len;
-    int	size_map;
+    int i;
+    int len;
+    int size_map;
 
     size_map = 0;
     while (map[size_map])
         size_map++;
-    if (!check_top_bottom(map, size_map))
-        return (0);
+    // if (!check_top_bottom(map, size_map))
+    //     return (0);
     i = 1;
     while (i < size_map - 1)
     {
@@ -389,11 +411,59 @@ int		check_borders(char **map)
     return (1);
 }
 
-int		valid_map(char **map)
+// int check_map(char **map)
+// {
+//     int i;
+//     int j;
+    
+//     i = 0;
+//     check_top_bottom(map);
+//     while(map[i])
+//     {
+//         if(map[i][0] == '2')
+//             check_for_borders(map);
+//     }
+// }
+
+int valid_map(char **map)
 {
     return (check_borders(map));
 }
 
+int check_player_position(char **map)
+{
+    int  i;
+    int j;
+    
+    i = 0;
+    while(map[i])
+    {
+        j = 0;
+        while(map[i][j])
+        {
+            if (map[i][j] == 'N' || map[i][j] == 'S' || map[i][j] == 'E' || map[i][j] == 'W')
+            {
+                return (1);
+            }
+            j++;
+        }
+        i++;
+    }
+    return (0);
+}
+
+static void	set_player_direction(t_data *data, int i, int j)
+{
+    if (data->map.map[i][j] == 'N')
+        data->player.angle = 3 * M_PI / 2;
+    else if (data->map.map[i][j] == 'S')
+        data->player.angle = M_PI / 2;
+    else if (data->map.map[i][j] == 'E')
+        data->player.angle = 0;
+    else if (data->map.map[i][j] == 'W')
+        data->player.angle = M_PI;
+    data->map.map[i][j] = '0';
+}
 
 void	set_player_data(t_data *data)
 {
@@ -411,15 +481,7 @@ void	set_player_data(t_data *data)
             {
                 data->player.pos_x = j;
                 data->player.pos_y = i;
-                if (data->map.map[i][j] == 'N')
-                    data->player.angle = 3 * M_PI / 2;
-                else if (data->map.map[i][j] == 'S')
-                    data->player.angle = M_PI / 2;
-                else if (data->map.map[i][j] == 'E')
-                    data->player.angle = 0;
-                else if (data->map.map[i][j] == 'W')
-                    data->player.angle = M_PI;
-                data->map.map[i][j] = '0';
+                set_player_direction(data, i, j);
                 return ;
             }
             j++;
@@ -428,12 +490,11 @@ void	set_player_data(t_data *data)
     }
 }
 
-
-static int	check_color_range(int color)
+static int check_color_range(int color)
 {
-    int	r;
-    int	g;
-    int	b;
+    int r;
+    int g;
+    int b;
 
     r = (color >> 16) & 0xFF;
     g = (color >> 8) & 0xFF;
@@ -441,15 +502,15 @@ static int	check_color_range(int color)
     if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255)
         return (0);
     return (1);
-  
 }
-int	check_config_data(t_data *data)
+
+int check_config_data(t_data *data)
 {
     if (data->textures.ceil_color == -1 ||
         data->textures.floor_color == -1)
     {
         fprintf(stderr,
-            "Error: Missing floor or ceiling color configuration\n");
+                "Error: Missing floor or ceiling color configuration\n");
         return (0);
     }
     if (!check_color_range(data->textures.ceil_color))
@@ -462,19 +523,132 @@ int	check_config_data(t_data *data)
         fprintf(stderr, "Error: Floor color invalid\n");
         return (0);
     }
+    if (!check_player_position(data->map.map))
+    {
+        fprintf(stderr, "Error: Player position not found\n");
+        return (0);
+    }
     return (1);
 }
 
-
-int	main(int argc, char **argv)
+static int check_top_borders(char **map)
 {
-    int		fd;
-    char	**map;
-    t_data	data;
-    int		i;
+    int	i;
+
+	i = 0;
+	while(map[0][i])
+	{
+		if(map[0][i] == '1')
+			i++;
+		else if (map[0][i] =='0')
+			return 0;
+		else if(map[0][i] == '2')
+		{
+			if(map[1][i] == '0')
+				return 0;
+			else if (map[1][i] == '1')
+				i++;
+		}
+	}
+	return 1;
+}
+
+ int check_bottom_borders(char **map)
+{
+	int i;
+	int buttom;
+    t_data  data;
+    buttom = data.map.height - 1;
+
+    i = 0;
+    while (map[buttom][i])
+    {
+         if(map[buttom][i] == '1')
+            i++;
+        else if (map[buttom][i] == '0')
+            return 0;
+        else if (map[buttom][i] == '2')
+        {
+            if(map[buttom -1 ][i] == '0')
+                return 0;
+            else if (map[buttom -1][i] == '1')
+                i++;
+        }
+    }
+    return 1;
+	
+}
+int check_left_borders(char **map)
+{
+    int i;
+    int left;
+
+    i = 1;
+    while (map[i])
+    {
+        left = 0;
+        if(map[i][left] == '1')
+            i++;
+        else if (map[i][left] == '0')
+            return 0;
+        else if(map[i][left] == '2')    
+        {
+            if(map[i][left + 1] == '0')
+                return 0;
+            else if (map[i][left + 1] == '1')
+                i++;
+        }
+    }
+    return 1;
+}
+int check_right_borders(char **map)
+{
+    int right;
+    int i;
+
+    i = 1;
+    while(map[i])
+    {
+        right = ft_strlen(map[i]) - 1;
+        if(map[i][right] == '1')
+            i++;
+        else if (map[i][right] == '0')
+            return 0;
+        else if(map[i][right] == '2')    
+        {
+            if(map[i][right - 1] == '0')
+                return 0;
+            else if (map[i][right - 1] == '1')
+                i++;
+        }
+    }   
+    return (1); 
+}
+
+int check_for_borders(char **map)
+{
+    return (check_top_bottom(map) && check_bottom_borders(map) && check_left_borders(map) && check_right_borders(map));
+}
+
+int main(int argc, char **argv)
+{
+    int fd;
+    char **map;
+    t_data data;
+    
 
     data.textures.ceil_color = -1;
     data.textures.floor_color = -1;
+    data.color_index = 0;
+    data.texture_index = 0;
+    data.map.map = NULL;
+    
+    // Initialize texture paths
+    data.textures_path[0] = NULL;
+    data.textures_path[1] = NULL;
+    data.textures_path[2] = NULL;
+    data.textures_path[3] = NULL;
+
     if (argc != 2)
     {
         fprintf(stderr, "Usage: %s map.cub\n", argv[0]);
@@ -491,8 +665,30 @@ int	main(int argc, char **argv)
         perror("open");
         return (1);
     }
+    fd = open(argv[1], O_RDONLY);
+
     map = read_cub_file(fd, &data);
+    if(map== NULL)
+    {
+        
+        return (1);
+    }
+    int i = 0;
+    while (map[i])
+    {
+        printf("line of map is----->:%s \n", map[i]);
+        i++;
+    }
     data.map.map = map;
+    int  n = 0;
+    while(map[n])
+    {
+        printf("%s\n",map[n]);
+        n++;
+    }
+    int check = check_borders(map);
+    printf("check new borders: %d\n", check);
+ 
     close(fd);
     if (!map)
     {
@@ -509,19 +705,28 @@ int	main(int argc, char **argv)
     set_player_data(&data);
     map_size(&data);
     printf("Map is valid.\n");
-    printf("Player position: (%f, %f)  Angle: %f\n", data.player.pos_x, \
-data.player.pos_y, data.player.angle);
-    i = 0;
-    while (map[i])
-    {
-        printf("%s\n", map[i]);
-        free(map[i]);
-        i++;
-    }
-    printf("Map height: %d  width: %d\n", data.map.height, data.map.width);
-    printf("Ceiling color: %06X  Floor color: %06X\n", data.textures.ceil_color, \
-data.textures.floor_color);
-printf("NO: %s\nSO: %s\nWE: %s\nEA: %s\n", data.textures_path[0], data.textures_path[2], data.textures_path[3], data.textures_path[1]);
+    printf("Player position: (%f, %f)  Angle: %f\n", data.player.pos_x,
+           data.player.pos_y, data.player.angle);
+    // i = 0;
+    // while (map[i])
+    // {
+    //     printf("%s\n", map[i]);
+    //     free(map[i]);
+    //     i++;
+    // }
+    // printf("Map height: %d  width: %d\n", data.map.height, data.map.width);
+    // printf("Ceiling color: %06X  Floor color: %06X\n", data.textures.ceil_color,
+    //        data.textures.floor_color);
+    // printf("NO: %s\nSO: %s\nWE: %s\nEA: %s\n", data.textures_path[0], data.textures_path[2], data.textures_path[3], data.textures_path[1]);
+    
+    // // Free texture paths
+    // for (int j = 0; j < 4; j++) {
+    //     if (data.textures_path[j]) {
+    //         free(data.textures_path[j]);
+    //         data.textures_path[j] = NULL;
+    //     }
+    // }
+    
     free(map);
     return (0);
 }
