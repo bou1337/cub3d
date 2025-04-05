@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 17:46:27 by hfazaz            #+#    #+#             */
-/*   Updated: 2025/04/05 00:34:43 by codespace        ###   ########.fr       */
+/*   Updated: 2025/04/05 21:34:00 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -306,40 +306,74 @@ static void read_map_lines(int fd, char **map, int *i)
     map[*i] = NULL;
 }
 
-int map_len(int fd)
+
+int	map_len(int fd)
 {
-    int len;
-    char *line;
+    int		len;
+    char	*line;
 
     len = 0;
     while ((line = get_line(fd)))
     {
         if (is_map_line(line))
-        {
             len++;
-        }
         free(line);
     }
-    return len;
+    return (len);
 }
 
-char **read_cub_file(int fd, t_data *data)
+
+static int	allocate_map(char ***map, int map_length)
 {
-    char **map;
-    int i;
+    *map = malloc(sizeof(char *) * (map_length + 1));
+    if (!(*map))
+        return (0);
+    return (1);
+}
+
+static int	process_map_data(int fd, t_data *data, char **map)
+{
+    int	i;
 
     i = 0;
-    map = malloc(sizeof(char *) * (map_len(fd) + 1));
-    close(fd);
-    fd = open("map.cub", O_RDONLY);
-    if (!map)
-        return (NULL);
     if (!read_config_lines(fd, data, map, &i))
     {
         free(map);
-        return (NULL);
+        return (0);
     }
     read_map_lines(fd, map, &i);
+    if (i == 0)
+    {
+        fprintf(stderr, "Error: No valid map data found\n");
+        free(map);
+        return (0);
+    }
+    return (1);
+}
+
+char	**read_cub_file(int fd, t_data *data)
+{
+    char	**map;
+    int		map_length;
+
+    map_length = map_len(fd);
+    if (map_length == 0)
+    {
+        fprintf(stderr, "Error: Empty map file or no valid map lines\n");
+        return (NULL);
+    }
+    if (!allocate_map(&map, map_length))
+        return (NULL);
+    close(fd);
+    fd = open("map.cub", O_RDONLY);
+    if (fd < 0)
+    {
+        free(map);
+        perror("open");
+        return (NULL);
+    }
+    if (!process_map_data(fd, data, map))
+        return (NULL);
     return (map);
 }
 
@@ -409,25 +443,6 @@ int check_borders(char **map)
         i++;
     }
     return (1);
-}
-
-// int check_map(char **map)
-// {
-//     int i;
-//     int j;
-    
-//     i = 0;
-//     check_top_bottom(map);
-//     while(map[i])
-//     {
-//         if(map[i][0] == '2')
-//             check_for_borders(map);
-//     }
-// }
-
-int valid_map(char **map)
-{
-    return (check_borders(map));
 }
 
 int check_player_position(char **map)
@@ -553,17 +568,17 @@ static int check_top_borders(char **map)
 	return 1;
 }
 
- int check_bottom_borders(char **map)
+int check_bottom_borders(char **map, int height)
 {
-	int i;
-	int buttom;
-    t_data  data;
-    buttom = data.map.height - 1;
+    int i;
+    int buttom;
+    
+    buttom = height - 1;
 
     i = 0;
     while (map[buttom][i])
     {
-         if(map[buttom][i] == '1')
+        if(map[buttom][i] == '1')
             i++;
         else if (map[buttom][i] == '0')
             return 0;
@@ -576,8 +591,8 @@ static int check_top_borders(char **map)
         }
     }
     return 1;
-	
 }
+
 int check_left_borders(char **map)
 {
     int i;
@@ -601,6 +616,7 @@ int check_left_borders(char **map)
     }
     return 1;
 }
+
 int check_right_borders(char **map)
 {
     int right;
@@ -625,108 +641,126 @@ int check_right_borders(char **map)
     return (1); 
 }
 
-int check_for_borders(char **map)
+
+int	check_for_borders(char **map)
 {
-    return (check_top_bottom(map) && check_bottom_borders(map) && check_left_borders(map) && check_right_borders(map));
+    int	height;
+
+    height = 0;
+    while (map[height])
+        height++;
+    if (!check_top_borders(map))
+        return (0);
+    if (!check_bottom_borders(map, height))
+        return (0);
+    if (!check_left_borders(map))
+        return (0);
+    if (!check_right_borders(map))
+        return (0);
+    return (1);
 }
 
-int main(int argc, char **argv)
+
+static void	inite_data(t_data *data)
 {
-    int fd;
-    char **map;
-    t_data data;
-    
+    data->textures.ceil_color = -1;
+    data->textures.floor_color = -1;
+    data->color_index = 0;
+    data->texture_index = 0;
+    data->map.map = NULL;
+    data->textures_path[0] = NULL;
+    data->textures_path[1] = NULL;
+    data->textures_path[2] = NULL;
+    data->textures_path[3] = NULL;
+}
 
-    data.textures.ceil_color = -1;
-    data.textures.floor_color = -1;
-    data.color_index = 0;
-    data.texture_index = 0;
-    data.map.map = NULL;
-    
-    // Initialize texture paths
-    data.textures_path[0] = NULL;
-    data.textures_path[1] = NULL;
-    data.textures_path[2] = NULL;
-    data.textures_path[3] = NULL;
 
+static int	validate_args(int argc, char **argv, int *fd)
+{
     if (argc != 2)
     {
         fprintf(stderr, "Usage: %s map.cub\n", argv[0]);
-        return (1);
+        return (0);
     }
     if (!check_extension(argv[1]))
     {
         fprintf(stderr, "Error: File must have a .cub extension\n");
-        return (1);
+        return (0);
     }
-    fd = open(argv[1], O_RDONLY);
-    if (fd < 0)
+    *fd = open(argv[1], O_RDONLY);
+    if (*fd < 0)
     {
         perror("open");
-        return (1);
+        return (0);
     }
-    fd = open(argv[1], O_RDONLY);
+    return (1);
+}
 
-    map = read_cub_file(fd, &data);
-    if(map== NULL)
+
+static void	cleanup(t_data *data, char **map)
+{
+    int	i;
+    int	j;
+
+    i = 0;
+    while (map && map[i])
     {
-        
-        return (1);
-    }
-    int i = 0;
-    while (map[i])
-    {
-        printf("line of map is----->:%s \n", map[i]);
+        free(map[i]);
         i++;
     }
+    free(map);
+    j = 0;
+    while (j < 4)
+    {
+        if (data->textures_path[j])
+            free(data->textures_path[j]);
+        j++;
+    }
+}
+
+
+
+
+static void	print_map_info(t_data *data)
+{
+    printf("Map is valid.\n");
+    printf("Player position: (%f, %f)  Angle: %f\n", 
+        data->player.pos_x, data->player.pos_y, data->player.angle);
+    printf("Map height: %d  width: %d\n", 
+        data->map.height, data->map.width);
+    printf("Ceiling color: %06X  Floor color: %06X\n", 
+        data->textures.ceil_color, data->textures.floor_color);
+    printf("NO: %s\nSO: %s\nWE: %s\nEA: %s\n", 
+        data->textures_path[0], data->textures_path[2], 
+        data->textures_path[3], data->textures_path[1]);
+}
+
+int	main(int argc, char **argv)
+{
+    int		fd;
+    char	**map;
+    t_data	data;
+
+    inite_data(&data);
+    if (!validate_args(argc, argv, &fd))
+        return (1);
+    map = read_cub_file(fd, &data);
+    if (map == NULL)
+    {
+        close(fd);
+        return (1);
+    }
     data.map.map = map;
-    int  n = 0;
-    while(map[n])
-    {
-        printf("%s\n",map[n]);
-        n++;
-    }
-    int check = check_borders(map);
-    printf("check new borders: %d\n", check);
- 
     close(fd);
-    if (!map)
-    {
-        fprintf(stderr, "Failed to load map\n");
-        return (1);
-    }
-    if (!check_config_data(&data))
-        return (1);
-    if (!valid_map(map))
+    if (!check_config_data(&data) || !check_for_borders(map))
     {
         fprintf(stderr, "Invalid map format\n");
+        cleanup(&data, map);
         return (1);
     }
     set_player_data(&data);
     map_size(&data);
-    printf("Map is valid.\n");
-    printf("Player position: (%f, %f)  Angle: %f\n", data.player.pos_x,
-           data.player.pos_y, data.player.angle);
-    // i = 0;
-    // while (map[i])
-    // {
-    //     printf("%s\n", map[i]);
-    //     free(map[i]);
-    //     i++;
-    // }
-    // printf("Map height: %d  width: %d\n", data.map.height, data.map.width);
-    // printf("Ceiling color: %06X  Floor color: %06X\n", data.textures.ceil_color,
-    //        data.textures.floor_color);
-    // printf("NO: %s\nSO: %s\nWE: %s\nEA: %s\n", data.textures_path[0], data.textures_path[2], data.textures_path[3], data.textures_path[1]);
-    
-    // // Free texture paths
-    // for (int j = 0; j < 4; j++) {
-    //     if (data.textures_path[j]) {
-    //         free(data.textures_path[j]);
-    //         data.textures_path[j] = NULL;
-    //     }
-    // }
-    
-    free(map);
+    print_map_info(&data);
+    cleanup(&data, map);
     return (0);
 }
