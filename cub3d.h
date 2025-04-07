@@ -9,7 +9,8 @@
 #include <math.h>
 #include <stdlib.h>
 # include <unistd.h>
-#include <stdio.h> // For fprintf
+#include <stdio.h>
+ // For fprintf
 
 # define PI 3.14159265358   
 # define NO 0
@@ -114,7 +115,9 @@ typedef struct s_data
 	t_textures	textures;
 	t_player	player;
 	t_ray		*rays;
-
+	int map_found  ;
+	int color_index ;
+	int texture_index ;
 }t_data;
 
 void draw_rect(t_data *data, int x, int y, int color) ;
@@ -150,5 +153,69 @@ t_img	*get_img(t_data *data, int i) ;
 double	get_distance_between(double x1, double y1, double x2, double y2) ;
 int	pixel_inside_map(t_data *data, double x, double y) ;
 int	ft_strlen(const char *s) ;
+int ft_strcmp(const char *s1, const char *s2) ;
+int	check_extension(const char *filename) ;
+char	*get_line(int fd) ;
+int	is_valid_map_char(char c) ;
+int	is_map_line(char *line) ;
+int	parse_int(const char *str, int *i) ;
+int	parse_color(char *line, int *r, int *g, int *b)  ;
+char *extract_path(t_data *data, char *line) ;
+int	map_len(int fd)  ;
+char	**read_cub_file(int fd, t_data *data, char *filename) ;
+void map_size(t_data *data) ;
+int check_player_position(char **map) ;
+void	set_player_data(t_data *data) ;
+int check_config_data(t_data *data) ;
+int check_bottom_borders(char **map, int height) ;
+int check_left_borders(char **map) ;
+int check_right_borders(char **map) ;
+int	check_for_borders(char **map) ;
+char	*pad_line(char *line) ;
+int	check_color_component(char *line, int *i, int *component) ;
+int is_texture(t_data *data, char *line) ;
+
+int	handle_colors(t_data *data, char *line) ;
+int	handle_map_line(char *line, t_data *data, char **map, int *i) ;
+int	process_config_line(char *line, t_data *data, char **map, int *i) ; 
+int	read_config_lines(int fd, t_data *data, char **map, int *i)  ;
+int	check_empty_line(char *line) ;
+int	read_remaining_lines(int fd) ;
+int	read_map_lines(int fd, char **map, int *i)  ;
+int	allocate_map(char ***map, int map_length) ;
+
+int	process_map_data(int fd, t_data *data, char **map) ; 
+void	set_player_direction(t_data *data, int i, int j)  ;
+int check_color_range(int color) ;
+int check_top_borders(char **map) ;
+void	inite_data1(t_data *data) ;
+int	validate_args(int argc, char **argv, int *fd) ;
+void	cleanup(t_data *data, char **map)  ;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #endif

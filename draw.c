@@ -15,7 +15,7 @@ int	update_map(t_data *data)
 
 int	draw_map(t_data *data)
 {
-	//draw_mapp(data) ;
+
 	cast_rays(data);
 	mini_map(data) ;
 	mlx_put_image_to_window(data->mlx, data->win, data->img.img, 0, 0);
@@ -54,7 +54,7 @@ int	draw_column(t_data *data, int x)
 	while (++y <= data->rays[x].top_y)
 		put_color_to_pixel(data, x, y, data->textures.ceil_color);
 	while (y <= data->rays[x].bottom_y)
-	put_color_to_pixel(data,x, y++,0xffffff) ;
+	put_pixel_to_pixel(data ,get_img(data,x),x,y++) ;
 	while (y < data->screen.height)
 		put_color_to_pixel(data, x, y++, data->textures.floor_color);
 	return (0);

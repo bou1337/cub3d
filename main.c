@@ -22,8 +22,10 @@ char *map_string =
         "11000000000000000011\n"
         "11111111111111111111\n";
 
-        int main(void)
+        int main(int argc, char *argv[])
         {
+            int		fd;
+            char	**map;
             t_data *data;
             data = malloc(sizeof(t_data));
             if (!data)
@@ -31,29 +33,31 @@ char *map_string =
                 printf("Error: Failed to allocate memory for data\n");
                 return (1);
             }
-        
-            ft_memset(data, 0, sizeof(t_data)); 
-            data->map.map = ft_split(map_string, '\n');
-            if (!data->map.map)
-            {
-                printf("Error: Failed to split map string\n");
-                return (1);
+            inite_data1(data) ;
+            if (!validate_args(argc, argv, &fd))
+            return (1);
+            map = read_cub_file(fd, data, argv[1]);
+           if (map == NULL)
+           {
+           close(fd);
+            return (1);
             }
-            
-            data->player.pos_x = 10 ;
-            data->player.pos_y = 10 ; 
-            data->player.angle = M_PI ; // Initialize player angle (facing north)   
+            data->map.map = map;
+            close(fd);
+
+          if (!check_config_data(data) || !check_for_borders(map))
+          {
+        fprintf(stderr, "Invalid map format\n");
+        cleanup(data, map);
+        return (1);
+        }
+        set_player_data(data);
+        map_size(data);
+            init_data(data);
+             // Initialize player angle (facing north)   
             data->player.move_forward = 0;  
             data->player.move_right = 0;
-            data->player.turn_right = 0;
-            data->map.height = 20;
-            data->map.width = 20;
-            data->textures.floor_color = 8543821 ;
-            data->textures.ceil_color =0x87CEEB; 
-            data->textures_path[0] ="./textures/c.xpm";
-            data->textures_path[1] ="./textures/c.xpm";
-            data->textures_path[2] ="./textures/c.xpm";
-            data->textures_path[3] ="./textures/c.xpm";
+            data->player.turn_right = 0;    
             data->screen.height = 1000;
 	        data->screen.width = 1900;
 	        data->screen.size = 8;

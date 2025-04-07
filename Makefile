@@ -2,7 +2,7 @@ NAME = cub3d
 CC = gcc
 MLX = -lmlx -lXext -lX11 -lm
 
-SRCS = main.c  init.c intr.c  player.c util.c cast_ray.c draw.c exit.c handel_key.c draw_map.c
+SRCS = main.c  init.c intr.c  player.c util.c cast_ray.c draw.c exit.c handel_key.c draw_map.c check.c
 OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)
