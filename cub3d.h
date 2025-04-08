@@ -192,5 +192,6 @@ int	validate_args(int argc, char **argv, int *fd) ;
 void	cleanup(t_data *data, char **map)  ;
 void Set_player_movement_state(t_data *data) ;
 int alloc_data(t_data **data) ;
+int parsing_data(int argc, char *argv[], t_data **data) ;
 
 #endif

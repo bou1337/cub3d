@@ -11,32 +11,10 @@
             int		fd;
             char	**map;
             t_data *data;
-            alloc_data(&data) ;
-            if(inite_data(data)) 
-              return 1  ;
-            if (!validate_args(argc, argv, &fd))
+          if (parsing_data(argc, argv, &data))
+          return (1) ;
+          if (init_data(data))
             return (1);
-            map = read_cub_file(fd, data, argv[1]);
-           if (map == NULL)
-           {
-           close(fd);
-            return (1);
-            }
-            data->map.map = map;
-            close(fd);
-
-          if (!check_config_data(data) || !check_for_borders(map))
-          {
-        fprintf(stderr, "Invalid map format\n");
-        cleanup(data, map);
-        return (1);
-        }
-        set_player_data(data);
-        map_size(data);
-        
-          
-             if (init_data(data))
-                return (1);
             data->map.redraw = 1;
             draw_map(data);
             mlx_hook(data->win, DestroyNotify, 0, ft_close, data);
