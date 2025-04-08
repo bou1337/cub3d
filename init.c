@@ -127,22 +127,14 @@ int parsing_data(int argc, char *argv[], t_data **data)
     char    **map;
 
     if (alloc_data(data) || inite_data(*data))
-    {
-        fprintf(stderr, "Error: Failed to allocate or initialize data\n");
         return (1);
-    }
-
     if (!validate_args(argc, argv, &fd))
         return (1);
-
     map = read_cub_file(fd, *data, argv[1]);
     close(fd);
-
     if (map == NULL)
         return (1);
-
     (*data)->map.map = map;
-
     if (!check_config_data(*data) || !check_for_borders(map))
     {
         fprintf(stderr, "Invalid map format\n");
