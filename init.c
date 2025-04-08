@@ -121,4 +121,3 @@ int alloc_data(t_data **data)
     return (0);
 }
 
-int  da

@@ -11,7 +11,7 @@
             int		fd;
             char	**map;
             t_data *data;
-             
+            alloc_data(&data) ;
             if(inite_data(data)) 
               return 1  ;
             if (!validate_args(argc, argv, &fd))
