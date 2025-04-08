@@ -275,7 +275,7 @@ char *extract_path(t_data *data, char *line)
 
     if (!parse_color(line + 1, &r, &g, &b))
     {
-        fprintf(stderr, "Error: Invalid color\n");
+        ft_fprintf("Error: Invalid color\n");
         free(line);
         return (0);
     }
@@ -294,7 +294,7 @@ char *extract_path(t_data *data, char *line)
 
     if (data->color_index == 0 || data->texture_index == 0)
     {
-        fprintf(stderr, "Map should be at the end of file\n");
+        ft_fprintf("Map should be at the end of file\n");
         free(line);
         return (0);
     }
@@ -353,7 +353,7 @@ char *extract_path(t_data *data, char *line)
     {
         if (line[j] != ' ' && line[j] != '\t')
         {
-            fprintf(stderr, "Error: Invalid structure\n");
+            ft_fprintf("Error: Invalid structure\n");
             free(line);
             return (0);
         }
@@ -375,7 +375,7 @@ int	read_remaining_lines(int fd)
         {
             if (line[j] != ' ' && line[j] != '\t')
             {
-                fprintf(stderr, "Error: Invalid content after map section\n");
+                ft_fprintf("Error: Invalid content after map section\n");
                 free(line);
                 return (0);
             }
@@ -450,7 +450,7 @@ int	map_len(int fd)
     
     if (i == 0)
     {
-        fprintf(stderr, "Error: No valid map data found\n");
+        ft_fprintf("Error: No valid map data found\n");
         free(map);
         return (0);
     }
@@ -465,7 +465,7 @@ char	**read_cub_file(int fd, t_data *data, char *filename)
     map_length = map_len(fd);
     if (map_length == 0)
     {
-        fprintf(stderr, "Error: Empty map file or no valid map lines\n");
+        ft_fprintf("Error: Empty map file or no valid map lines\n");
         return (NULL);
     }
     if (!allocate_map(&map, map_length))
@@ -529,12 +529,12 @@ int check_player_position(char **map)
     
     if (player_count == 0)
     {
-        fprintf(stderr, "Error: No player position found\n");
+        ft_fprintf("Error: No player position found\n");
         return (0);
     }
     else if (player_count > 1)
     {
-        fprintf(stderr, "Error: Multiple player positions found\n");
+        ft_fprintf("Error: Multiple player positions found\n");
         return (0);
     }
     
@@ -598,18 +598,17 @@ int check_config_data(t_data *data)
     if (data->textures.ceil_color == -1 ||
         data->textures.floor_color == -1)
     {
-        fprintf(stderr,
-                "Error: Missing floor or ceiling color configuration\n");
+        ft_fprintf("Error: Missing floor or ceiling color configuration\n");
         return (0);
     }
     if (!check_color_range(data->textures.ceil_color))
     {
-        fprintf(stderr, "Error: Ceiling color invalid\n");
+        ft_fprintf("Error: Ceiling color invalid\n");
         return (0);
     }
     if (!check_color_range(data->textures.floor_color))
     {
-        fprintf(stderr, "Error: Floor color invalid\n");
+        ft_fprintf("Error: Floor color invalid\n");
         return (0);
     }
     if (!check_player_position(data->map.map))
@@ -771,12 +770,14 @@ int	check_for_borders(char **map)
 {
     if (argc != 2)
     {
-        fprintf(stderr, "Usage: %s map.cub\n", argv[0]);
+        ft_fprintf("Usage: ");
+        ft_fprintf(argv[0]) ;
+        ft_fprintf(" map.cub\n") ;
         return (0);
     }
     if (!check_extension(argv[1]))
     {
-        fprintf(stderr, "Error: File must have a .cub extension\n");
+        ft_fprintf("Error: File must have a .cub extension\n");
         return (0);
     }
     *fd = open(argv[1], O_RDONLY);
@@ -810,21 +811,6 @@ int	check_for_borders(char **map)
     }
 }
 
-
-
-static void	print_map_info(t_data *data)
-{
-    printf("Map is valid.\n");
-    printf("Player position: (%f, %f)  Angle: %f\n", 
-        data->player.pos_x, data->player.pos_y, data->player.angle);
-    printf("Map height: %d  width: %d\n", 
-        data->map.height, data->map.width);
-    printf("Ceiling color: %06X  Floor color: %06X\n", 
-        data->textures.ceil_color, data->textures.floor_color);
-    printf("NO: %s\nSO: %s\nWE: %s\nEA: %s\n", 
-        data->textures_path[0], data->textures_path[2], 
-        data->textures_path[3], data->textures_path[1]);
-}
 
 
 // int	main(int argc, char **argv)
@@ -862,3 +848,8 @@ static void	print_map_info(t_data *data)
 //     cleanup(&data, map);
 //     return (0);
 // }
+
+void ft_fprintf(const char *s)
+{
+    write(2, s, ft_strlen(s));
+}

@@ -17,7 +17,9 @@ static int load_texture(void *mlx, t_img *texture, char *path)
     texture->img = mlx_xpm_file_to_image(mlx, path, &texture->w, &texture->h);
     if (!texture->img)
     {
-        fprintf(stderr, "Error: Failed to load texture %s\n", path);
+        ft_fprintf("Error: Failed to load texture");
+        ft_fprintf(path) ;
+        write(2, "\n",1) ;
         return (1);
     }
     texture->addr = mlx_get_data_addr(texture->img, &texture->bpp, &texture->line, &texture->endian);
@@ -106,14 +108,14 @@ int alloc_data(t_data **data)
     *data = malloc(sizeof(t_data));
     if (!*data)
     {
-        fprintf(stderr, "Error: Failed to allocate memory for t_data\n");
+        ft_fprintf("Error: Failed to allocate memory for t_data\n");
         return (1);
     }
 
     (*data)->rays = malloc(sizeof(t_ray) * 1900);
     if (!(*data)->rays)
     {
-        fprintf(stderr, "Error: Failed to allocate memory for rays\n");
+        ft_fprintf( "Error: Failed to allocate memory for rays\n");
         free(*data);
         *data = NULL;
         return (1);
@@ -137,7 +139,7 @@ int parsing_data(int argc, char *argv[], t_data **data)
     (*data)->map.map = map;
     if (!check_config_data(*data) || !check_for_borders(map))
     {
-        fprintf(stderr, "Invalid map format\n");
+        ft_fprintf( "Invalid map format\n");
         cleanup(*data, map);
         return (1);
     }
