@@ -183,15 +183,14 @@ int	check_empty_line(char *line) ;
 int	read_remaining_lines(int fd) ;
 int	read_map_lines(int fd, char **map, int *i)  ;
 int	allocate_map(char ***map, int map_length) ;
-
 int	process_map_data(int fd, t_data *data, char **map) ; 
 void	set_player_direction(t_data *data, int i, int j)  ;
 int check_color_range(int color) ;
 int check_top_borders(char **map) ;
-void	inite_data1(t_data *data) ;
+int	inite_data(t_data *data) ;
 int	validate_args(int argc, char **argv, int *fd) ;
 void	cleanup(t_data *data, char **map)  ;
 void Set_player_movement_state(t_data *data) ;
-int allocation(t_data *data)  ;
+int alloc_data(t_data **data) ;
 
 #endif

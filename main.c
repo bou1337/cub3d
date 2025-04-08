@@ -1,25 +1,19 @@
 #include "cub3d.h"
 
 
+#include "cub3d.h"
+
+
+
 
         int main(int argc, char *argv[])
         {
             int		fd;
             char	**map;
             t_data *data;
-            data = malloc(sizeof(t_data));
-            if (!data)
-            {
-                printf("Error: Failed to allocate memory for data\n");
-                return (1);
-            }
-             data->rays = malloc(sizeof(t_ray) * 1900);
-            if (!data->rays)
-            {
-                printf("Error: Failed to allocate memory for rays\n");
-                return (1);
-            }
-            inite_data1(data) ;
+             
+            if(inite_data(data)) 
+              return 1  ;
             if (!validate_args(argc, argv, &fd))
             return (1);
             map = read_cub_file(fd, data, argv[1]);

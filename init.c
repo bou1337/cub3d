@@ -101,19 +101,24 @@ int  init_data(t_data *data)
     return 0;   
 }
 
-int allocation(t_data *data)
+int alloc_data(t_data **data)
 {
-    data = malloc(sizeof(t_data));
-            if (!data)
-            {
-                printf("Error: Failed to allocate memory for data\n");
-                return (1);
-            }
-             data->rays = malloc(sizeof(t_ray) * 1900);
-            if (!data->rays)
-            {
-                printf("Error: Failed to allocate memory for rays\n");
-                return (1);
-            }
-            return 0  ;
+    *data = malloc(sizeof(t_data));
+    if (!*data)
+    {
+        fprintf(stderr, "Error: Failed to allocate memory for t_data\n");
+        return (1);
+    }
+
+    (*data)->rays = malloc(sizeof(t_ray) * 1900);
+    if (!(*data)->rays)
+    {
+        fprintf(stderr, "Error: Failed to allocate memory for rays\n");
+        free(*data);
+        *data = NULL;
+        return (1);
+    }
+    return (0);
 }
+
+int  da

@@ -751,7 +751,7 @@ int	check_for_borders(char **map)
 }
 
 
- void	inite_data1(t_data *data)
+ int 	inite_data(t_data *data)
 {
     data->textures.ceil_color = -1;
     data->textures.floor_color = -1;
@@ -763,6 +763,7 @@ int	check_for_borders(char **map)
     data->textures_path[1] = NULL;
     data->textures_path[2] = NULL;
     data->textures_path[3] = NULL;
+    return 0 ;
 }
 
 
