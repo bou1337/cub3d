@@ -191,31 +191,7 @@ int check_top_borders(char **map) ;
 void	inite_data1(t_data *data) ;
 int	validate_args(int argc, char **argv, int *fd) ;
 void	cleanup(t_data *data, char **map)  ;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+void Set_player_movement_state(t_data *data) ;
+int allocation(t_data *data)  ;
 
 #endif
