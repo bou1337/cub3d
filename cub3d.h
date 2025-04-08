@@ -174,7 +174,6 @@ int	check_for_borders(char **map) ;
 char	*pad_line(char *line) ;
 int	check_color_component(char *line, int *i, int *component) ;
 int is_texture(t_data *data, char *line) ;
-
 int	handle_colors(t_data *data, char *line) ;
 int	handle_map_line(char *line, t_data *data, char **map, int *i) ;
 int	process_config_line(char *line, t_data *data, char **map, int *i) ; 
