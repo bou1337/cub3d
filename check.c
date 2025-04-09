@@ -637,7 +637,7 @@ int check_top_borders(char **map)
             else if (map[1][i] == '1')
                 i++;
             else
-                i++;  
+                return 0;  
         }
         else
             return 0;
@@ -666,10 +666,10 @@ int check_bottom_borders(char **map, int height)
             else if (map[buttom - 1][i] == '1')
                 i++;
             else
-                i++;
+                return 0;
         }
         else
-            i++; 
+            return 0; 
     }
     return 1;
 }
@@ -694,10 +694,10 @@ int check_left_borders(char **map)
             else if (map[i][left + 1] == '1')
                 i++;
             else
-                i++;  
+                return 0;  
         }
         else
-            i++; 
+            return 0; 
     }
     return 1;
 }
@@ -722,10 +722,10 @@ int check_right_borders(char **map)
             else if (map[i][right - 1] == '1')
                 i++;
             else
-                i++;  
+                return 0;  
         }
         else
-            i++; 
+            return 0; 
     }   
     return (1); 
 }
@@ -809,6 +809,35 @@ int	check_for_borders(char **map)
             free(data->textures_path[j]);
         j++;
     }
+}
+int	check_map(t_data *data)
+{
+    int		i;
+    int		j;
+    int		len;
+    char	**map;
+
+    i = 1;
+    len = data->map.height;
+    map = data->map.map;
+    while (i < len -1)
+    {
+        j = 0;
+        while (map[i][j])
+        {
+            if (map[i][j] == '0')
+            {
+                if ((map[i - 1][j] != '0' && map[i - 1][j] != '1') || 
+                    (map[i + 1][j] != '0' && map[i + 1][j] != '1') || 
+                    (map[i][j - 1] != '0' && map[i][j - 1] != '1') || 
+                    (map[i][j + 1] != '0' && map[i][j + 1] != '1'))
+                    return (0);
+            }
+            j++;
+        }
+        i++;
+    }
+    return (1);
 }
 
 
