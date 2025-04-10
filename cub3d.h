@@ -2,9 +2,9 @@
 #define  CUB3D_H
 
 
-#include <mlx.h>
+// #include <mlx.h>
 #include <stdio.h>
-#include <X11/X.h>
+// #include <X11/X.h>
 #include <fcntl.h>
 #include <math.h>
 #include <stdlib.h>
@@ -192,6 +192,7 @@ void	cleanup(t_data *data, char **map)  ;
 void Set_player_movement_state(t_data *data) ;
 int alloc_data(t_data **data) ;
 int parsing_data(int argc, char *argv[], t_data **data) ;
+char	*handle_end_of_file(char *line, int i);
 void ft_fprintf(const char *s) ;
 int	check_map(t_data *data) ;
 

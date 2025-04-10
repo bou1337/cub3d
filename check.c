@@ -45,18 +45,39 @@ int	check_extension(const char *filename)
     return (0);
 }
 
-char *get_line(int fd)
+static char	*reallocate_line(char *line, int capacity, int i)
 {
-    char *line;
-    char *temp;
-    int capacity = 128;
-    int i = 0;
-    char c;
+    char	*temp;
+    int		j;
 
+    temp = malloc(sizeof(char) * capacity);
+    if (!temp)
+    {
+        free(line);
+        return (NULL);
+    }
+    j = 0;
+    while (j < i)
+    {
+        temp[j] = line[j];
+        j++;
+    }
+    free(line);
+    return (temp);
+}
+
+char	*get_line(int fd)
+{
+    char	*line;
+    int		capacity;
+    int		i;
+    char	c;
+
+    capacity = 128;
+    i = 0;
     line = malloc(sizeof(char) * capacity);
     if (!line)
         return (NULL);
-
     while (read(fd, &c, 1) > 0)
     {
         if (c == '\n')
@@ -64,38 +85,33 @@ char *get_line(int fd)
             line[i] = '\0';
             return (line);
         }
-
         line[i++] = c;
-
-        // Reallocate if we're approaching capacity
         if (i >= capacity - 1)
         {
             capacity *= 2;
-            temp = malloc(sizeof(char) * capacity);
-            if (!temp)
-            {
-                free(line);
+            line = reallocate_line(line, capacity, i);
+            if (!line)
                 return (NULL);
-            }
-            memcpy(temp, line, i);
-            free(line);
-            line = temp;
         }
     }
+    return (handle_end_of_file(line, i));
+}
 
+char	*handle_end_of_file(char *line, int i)
+{
     if (i > 0)
     {
         line[i] = '\0';
         return (line);
     }
-
     free(line);
     return (NULL);
 }
+
 int	is_valid_map_char(char c)
 {
-    return (c == ' ' || c == '0' || c == '1' || c == '2' || 
-        c == 'N' || c == 'S' || c == 'W' || c == 'E');
+    return (c == ' ' || c == '0' || c == '1' || c == '2'
+        || c == 'N' || c == 'S' || c == 'W' || c == 'E');
 }
 
 int	is_map_line(char *line)
@@ -116,7 +132,6 @@ int	is_map_line(char *line)
             return (0);
         i++;
     }
-    
     return (1);
 }
 
