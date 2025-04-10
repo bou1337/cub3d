@@ -2,13 +2,13 @@ NAME = cub3d
 CC = gcc
 MLX = -lmlx -lXext -lX11 -lm
 
-SRCS = main.c  init.c  util.c  check.c
+SRCS = main.c  init.c intr.c  player.c util.c cast_ray.c draw.c exit.c handel_key.c draw_map.c check.c
 OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC) $(OBJS) -o $(NAME) 
+	$(CC) $(OBJS) -o $(NAME) $(MLX)
 
 clean:
 	rm -f $(OBJS)
