@@ -2,15 +2,15 @@
 #define  CUB3D_H
 
 
-// #include <mlx.h>
+#include <mlx.h>
 #include <stdio.h>
-// #include <X11/X.h>
+#include <X11/X.h>
 #include <fcntl.h>
 #include <math.h>
 #include <stdlib.h>
 # include <unistd.h>
 #include <stdio.h>
- // For fprintf
+//  For fprintf
 
 # define PI 3.14159265358   
 # define NO 0
