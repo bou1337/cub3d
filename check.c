@@ -6,7 +6,7 @@
 /*   By: hfazaz <hfazaz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 17:46:27 by hfazaz            #+#    #+#             */
-/*   Updated: 2025/04/07 01:18:45 by hfazaz           ###   ########.fr       */
+/*   Updated: 2025/04/08 11:36:42 by hfazaz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	check_extension(const char *filename)
             dot = filename;
         filename++;
     }
-    printf("dot: %s\n", dot);
+    // printf("dot: %s\n", dot);
     if (!dot || dot[1] == '\0')
         return (0);
     
@@ -125,7 +125,7 @@ int	is_map_line(char *line)
 
 int	parse_int(const char *str, int *i)
 {
-    int	num;
+    long	num;
     int	sign;
 
     num = 0;
@@ -140,6 +140,11 @@ int	parse_int(const char *str, int *i)
     while (str[*i] >= '0' && str[*i] <= '9')
     {
         num = num * 10 + (str[*i] - '0');
+        // if (num > 0x7fffffff || (num * sign) < 0xffffffff)
+        // {
+        //     fprintf(stderr, "Error: Integer overflow\n");
+        //     return (0);
+        // }
         (*i)++;
     }
     return (sign * num);
@@ -275,7 +280,7 @@ char *extract_path(t_data *data, char *line)
 
     if (!parse_color(line + 1, &r, &g, &b))
     {
-        ft_fprintf("Error: Invalid color\n");
+        fprintf(stderr, "Error: Invalid color\n");
         free(line);
         return (0);
     }
@@ -294,7 +299,7 @@ char *extract_path(t_data *data, char *line)
 
     if (data->color_index == 0 || data->texture_index == 0)
     {
-        ft_fprintf("Map should be at the end of file\n");
+        fprintf(stderr, "Map should be at the end of file\n");
         free(line);
         return (0);
     }
@@ -307,7 +312,8 @@ char *extract_path(t_data *data, char *line)
     return (1);
 }
 
- int	process_config_line(char *line, t_data *data, char **map, int *i)
+
+int	process_config_line(char *line, t_data *data, char **map, int *i)
 {
     if (line[0] == 'C' || line[0] == 'F')
         return (handle_colors(data, line));
@@ -344,7 +350,7 @@ char *extract_path(t_data *data, char *line)
     return (0);
 }
 
- int	check_empty_line(char *line)
+int	check_empty_line(char *line)
 {
     int	j;
 
@@ -353,7 +359,7 @@ char *extract_path(t_data *data, char *line)
     {
         if (line[j] != ' ' && line[j] != '\t')
         {
-            ft_fprintf("Error: Invalid structure\n");
+            fprintf(stderr, "Error: Invalid structure\n");
             free(line);
             return (0);
         }
@@ -363,7 +369,7 @@ char *extract_path(t_data *data, char *line)
     return (1);
 }
 
-int	read_remaining_lines(int fd)
+ int	read_remaining_lines(int fd)
 {
     char	*line;
     int		j;
@@ -375,7 +381,7 @@ int	read_remaining_lines(int fd)
         {
             if (line[j] != ' ' && line[j] != '\t')
             {
-                ft_fprintf("Error: Invalid content after map section\n");
+                fprintf(stderr, "Error: Invalid content after map section\n");
                 free(line);
                 return (0);
             }
@@ -386,7 +392,7 @@ int	read_remaining_lines(int fd)
     return (1);
 }
 
- int	read_map_lines(int fd, char **map, int *i)
+int	read_map_lines(int fd, char **map, int *i)
 {
     char	*line;
 
@@ -432,7 +438,7 @@ int	map_len(int fd)
     return (1);
 }
 
- int	process_map_data(int fd, t_data *data, char **map)
+int	process_map_data(int fd, t_data *data, char **map)
 {
     int i;
 
@@ -450,7 +456,7 @@ int	map_len(int fd)
     
     if (i == 0)
     {
-        ft_fprintf("Error: No valid map data found\n");
+        fprintf(stderr, "Error: No valid map data found\n");
         free(map);
         return (0);
     }
@@ -465,7 +471,7 @@ char	**read_cub_file(int fd, t_data *data, char *filename)
     map_length = map_len(fd);
     if (map_length == 0)
     {
-        ft_fprintf("Error: Empty map file or no valid map lines\n");
+        fprintf(stderr, "Error: Empty map file or no valid map lines\n");
         return (NULL);
     }
     if (!allocate_map(&map, map_length))
@@ -529,12 +535,12 @@ int check_player_position(char **map)
     
     if (player_count == 0)
     {
-        ft_fprintf("Error: No player position found\n");
+        fprintf(stderr, "Error: No player position found\n");
         return (0);
     }
     else if (player_count > 1)
     {
-        ft_fprintf("Error: Multiple player positions found\n");
+        fprintf(stderr, "Error: Multiple player positions found\n");
         return (0);
     }
     
@@ -578,7 +584,6 @@ void	set_player_data(t_data *data)
         i++;
     }
 }
-
  int check_color_range(int color)
 {
     int r;
@@ -598,17 +603,18 @@ int check_config_data(t_data *data)
     if (data->textures.ceil_color == -1 ||
         data->textures.floor_color == -1)
     {
-        ft_fprintf("Error: Missing floor or ceiling color configuration\n");
+        fprintf(stderr,
+                "Error: Missing floor or ceiling color configuration\n");
         return (0);
     }
     if (!check_color_range(data->textures.ceil_color))
     {
-        ft_fprintf("Error: Ceiling color invalid\n");
+        fprintf(stderr, "Error: Ceiling color invalid\n");
         return (0);
     }
     if (!check_color_range(data->textures.floor_color))
     {
-        ft_fprintf("Error: Floor color invalid\n");
+        fprintf(stderr, "Error: Floor color invalid\n");
         return (0);
     }
     if (!check_player_position(data->map.map))
@@ -637,7 +643,7 @@ int check_top_borders(char **map)
             else if (map[1][i] == '1')
                 i++;
             else
-                return 0;  
+                return 0 ;  
         }
         else
             return 0;
@@ -669,7 +675,7 @@ int check_bottom_borders(char **map, int height)
                 return 0;
         }
         else
-            return 0; 
+            return i++;  
     }
     return 1;
 }
@@ -694,7 +700,7 @@ int check_left_borders(char **map)
             else if (map[i][left + 1] == '1')
                 i++;
             else
-                return 0;  
+                return 0;
         }
         else
             return 0; 
@@ -722,10 +728,10 @@ int check_right_borders(char **map)
             else if (map[i][right - 1] == '1')
                 i++;
             else
-                return 0;  
+                return 0; 
         }
         else
-            return 0; 
+            return  0;
     }   
     return (1); 
 }
@@ -749,8 +755,7 @@ int	check_for_borders(char **map)
     return (1);
 }
 
-
- int 	inite_data(t_data *data)
+ int	inite_data(t_data *data)
 {
     data->textures.ceil_color = -1;
     data->textures.floor_color = -1;
@@ -762,7 +767,6 @@ int	check_for_borders(char **map)
     data->textures_path[1] = NULL;
     data->textures_path[2] = NULL;
     data->textures_path[3] = NULL;
-    return 0 ;
 }
 
 
@@ -770,14 +774,12 @@ int	check_for_borders(char **map)
 {
     if (argc != 2)
     {
-        ft_fprintf("Usage: ");
-        ft_fprintf(argv[0]) ;
-        ft_fprintf(" map.cub\n") ;
+        fprintf(stderr, "Usage: %s map.cub\n", argv[0]);
         return (0);
     }
     if (!check_extension(argv[1]))
     {
-        ft_fprintf("Error: File must have a .cub extension\n");
+        fprintf(stderr, "Error: File must have a .cub extension\n");
         return (0);
     }
     *fd = open(argv[1], O_RDONLY);
@@ -840,45 +842,7 @@ int	check_map(t_data *data)
     return (1);
 }
 
-
-
-// int	main(int argc, char **argv)
-// {
-//     int		fd;
-//     char	**map;
-//     t_data	data;
-//     inite_data_(&data);
-//     if (!validate_args(argc, argv, &fd))
-//         return (1);
-//     map = read_cub_file(fd, &data, argv[1]);
-//     if (map == NULL)
-//     {
-//         close(fd);
-//         return (1);
-//     }
-//     data.map.map = map;
-//     close(fd);
-//     if (!check_config_data(&data) || !check_for_borders(map))
-//     {
-//         fprintf(stderr, "Invalid map format\n");
-//         cleanup(&data, map);
-//         return (1);
-//     }
-//     int i = 0;
-//     while (map[i])
-//     {
-//         printf("%s\n", map[i]);
-//         i++;
-//     }
-    
-//     set_player_data(&data);
-//     map_size(&data);
-//     print_map_info(&data);
-//     cleanup(&data, map);
-//     return (0);
-// }
-
 void ft_fprintf(const char *s)
 {
-    write(2, s, ft_strlen(s));
+    write(2,s,ft_strlen(s)) ;
 }

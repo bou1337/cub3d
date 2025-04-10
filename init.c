@@ -128,16 +128,17 @@ int parsing_data(int argc, char *argv[], t_data **data)
     int     fd;
     char    **map;
 
-    if (alloc_data(data) || inite_data(*data))
+    if (alloc_data(data) || !inite_data(*data))
         return (1);
     if (!validate_args(argc, argv, &fd))
         return (1);
     map = read_cub_file(fd, *data, argv[1]);
     close(fd);
+   
     if (map == NULL)
         return (1);
     (*data)->map.map = map;
-    if (!check_config_data(*data) || !check_for_borders(map))
+    if (!check_config_data(*data) || !check_for_borders(map) || !check_map(*data))
     {
         ft_fprintf( "Invalid map format\n");
         cleanup(*data, map);
@@ -147,5 +148,7 @@ int parsing_data(int argc, char *argv[], t_data **data)
     map_size(*data);
     if (init_data(*data))
             return (1);
+
+    printf("hiii\n")  ;
     return (0);
 }
