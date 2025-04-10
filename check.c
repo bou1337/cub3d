@@ -624,7 +624,6 @@ int check_config_data(t_data *data)
     }
     return (1);
 }
-
 int check_top_borders(char **map)
 {
     int	i;
@@ -643,7 +642,7 @@ int check_top_borders(char **map)
             else if (map[1][i] == '1')
                 i++;
             else
-                return 0 ;  
+                 i++ ;  
         }
         else
             return 0;
@@ -672,10 +671,10 @@ int check_bottom_borders(char **map, int height)
             else if (map[buttom - 1][i] == '1')
                 i++;
             else
-                return 0;
+                 i++;
         }
         else
-            return i++;  
+            return 0 ;  
     }
     return 1;
 }
@@ -700,7 +699,7 @@ int check_left_borders(char **map)
             else if (map[i][left + 1] == '1')
                 i++;
             else
-                return 0;
+                i++;
         }
         else
             return 0; 
@@ -728,15 +727,13 @@ int check_right_borders(char **map)
             else if (map[i][right - 1] == '1')
                 i++;
             else
-                return 0; 
+                i++; 
         }
         else
             return  0;
     }   
     return (1); 
 }
-
-
 int	check_for_borders(char **map)
 {
     int	height;

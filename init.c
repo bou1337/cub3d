@@ -138,7 +138,13 @@ int parsing_data(int argc, char *argv[], t_data **data)
     if (map == NULL)
         return (1);
     (*data)->map.map = map;
-    if (!check_config_data(*data) || !check_for_borders(map) || !check_map(*data))
+    int i = 0;
+    while(map[i])
+    {
+        printf("map line is %s\n",map[i]);
+        i++;
+    }
+    if (!check_config_data(*data) || !check_for_borders(map))
     {
         ft_fprintf( "Invalid map format\n");
         cleanup(*data, map);
@@ -147,7 +153,12 @@ int parsing_data(int argc, char *argv[], t_data **data)
     set_player_data(*data);
     map_size(*data);
     if (init_data(*data))
-            return (1);
+    return (1);
+    if(!check_map(*data)){
+
+        printf("NOOOOOOOOOOO \n");
+        return 1;
+    }
 
     printf("hiii\n")  ;
     return (0);

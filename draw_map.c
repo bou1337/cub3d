@@ -28,16 +28,19 @@ void draw_mapp(t_data *data)
 {
     int i  = 0 ;
     int j  = 0  ;
-    while(i<data->map.height)
+    while(data->map.map[i])
     {       
         j = 0 ;
-        while(j<data->map.width)
+        while(data->map.map[i][j]!='\0')
         {
             if (data->map.map[i][j] == '1')
                 draw_rect(data, j, i, 0x0000FF); 
+            else if(data->map.map[i][j]=='2')
+                draw_rect(data, j, i,0);
             else
-                draw_rect(data, j, i, 0xFFFFFF);
-                j++ ; 
+          
+            draw_rect(data, j, i,0xFFFFFF);
+            j++ ; 
         }
         i++ ;
 }
