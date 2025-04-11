@@ -37,6 +37,7 @@ int	free_textures(t_data *data)
 	{
 		mlx_destroy_image(data->mlx, data->textures.south.img);
 		data->textures.south.img = NULL;
+	
 	}
 	return (0);
 }

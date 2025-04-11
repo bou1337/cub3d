@@ -86,9 +86,10 @@ int player_inside_map(t_data *data, double player_x, double player_y)
         return 0;
     j = (int)(player_x / data->screen.size);
     i = (int)(player_y / data->screen.size);
-
-    if (i < 0 || i >= data->map.height || j < 0 || j >= data->map.width)
-        return 0;
+	if (i < 0 || i >= data->map.height)
+		return (0);
+	if (j < 0 || j >= ft_strlen(data->map.map[i]))
+	return 0 ;
     return (data->map.map[i][j] != '1');
 }
 
