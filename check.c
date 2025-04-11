@@ -319,9 +319,9 @@ char *extract_path(t_data *data, char *line)
         free(line);
         return (0);
     }
-    if (line[0] == 'C')
+    if (line[0] == 'C' && line[1] == ' ')
         data->textures.ceil_color = (r << 16) | (g << 8) | b;
-    else
+    else if(line[0]== 'F' && line[1] == ' ')
         data->textures.floor_color = (r << 16) | (g << 8) | b;
     data->color_index = 1;
     free(line);
@@ -361,6 +361,19 @@ int	process_config_line(char *line, t_data *data, char **map, int *i)
     {
         data->map_found = 1;
         handle_map_line(line, data, map, i);
+    }
+    else if(line[0] == ' ')
+    {
+        int i = 0;
+        while(line[i] == ' ')
+            i++;
+        if(!line)
+            {
+                free(line);
+                return 1;
+            }
+        else 
+            return 0;
     }
     
     else

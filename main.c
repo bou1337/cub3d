@@ -3,8 +3,8 @@
         int main(int argc, char *argv[])
         {
             t_data *data;
-          if (!parsing_data(argc, argv, &data))
-              printf("valid map \n");
+          if (parsing_data(argc, argv, &data))
+             return 1 ;
             data->map.redraw = 1;
             draw_map(data);
             mlx_hook(data->win, DestroyNotify, 0, ft_close, data);

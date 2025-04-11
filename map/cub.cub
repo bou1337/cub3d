@@ -2,11 +2,29 @@ NO ./textures/101.xpm
 SO ./textures/100.xpm
 WE ./textures/100.xpm
 EA ./textures/101.xpm
+EA ./textures/101.xpm
+EA ./textures/101.xpm
+NO ./textures/101.xpm
+SO ./textures/100.xpm
+WE ./textures/100.xpm
+EA ./textures/101.xpm
+EA ./textures/101.xpm
+EA ./textures/101.xpm
+NO ./textures/101.xpm
+SO ./textures/100.xpm
+WE ./textures/100.xpm
+EA ./textures/101.xpm
+EA ./textures/101.xpm
+EA ./textures/101.xpm
+NO ./textures/101.xpm
+SO ./textures/100.xpm
+WE ./textures/100.xpm
+EA ./textures/101.xpm
+EA ./textures/101.xpm
+EA ./textures/101.xpm
 
-
-
-F 18,53,25
-C 153,204,255
+F    255,255,255 
+C        255,255,255
 
 11111111111111111111111111
 1111111111000000000000000011111111111
