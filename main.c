@@ -4,7 +4,11 @@
         {
             t_data *data;
           if (parsing_data(argc, argv, &data))
-             return 1 ;
+             {
+                ft_printf("Eroor \n check that file should contain Valid colors and textures\n valid map\n pay attention 
+                  if you have any duplicates of info and map should be at the end of map file\n");
+                return (1);
+             }
             data->map.redraw = 1;
             draw_map(data);
             mlx_hook(data->win, DestroyNotify, 0, ft_close, data);
