@@ -347,10 +347,19 @@ char *extract_path(t_data *data, char *line)
     return (1);
 }
 
-
 int	process_config_line(char *line, t_data *data, char **map, int *i)
 {
-    if (line[0] == 'C' || line[0] == 'F')
+    int j = 0;
+
+    while(line[j] == ' ' || line[j] == '\t')
+        j++;
+    if(line[j] == '\0')
+    {
+        free(line);
+        return (1);
+    }
+    
+    if (line[j] == 'C' || line[j] == 'F')
         return (handle_colors(data, line));
     else if (is_texture(data, line))
     {
@@ -360,29 +369,31 @@ int	process_config_line(char *line, t_data *data, char **map, int *i)
     else if (is_map_line(line))
     {
         data->map_found = 1;
-        handle_map_line(line, data, map, i);
+        return (handle_map_line(line, data, map, i));
     }
-    else if(line[0] == ' ')
+    else if(line[j] == ' ')
     {
-        int i = 0;
-        while(line[i] == ' ')
-            i++;
-        if(!line)
-            {
-                free(line);
-                return 1;
-            }
+        while(line[j] == ' ')
+            j++;
+        if(line[j] == '\0')
+        {
+            free(line);
+            return 1;
+        }
         else 
+        {
+            free(line);
             return 0;
+        }
     }
-    
     else
     {
+        // Invalid line type - should return error
+        fprintf(stderr, "Error: Invalid content in configuration: %s\n", line);
         free(line);
-        return  (1);
+        return (0);  // Return FAILURE for unknown content
     }
 }
-
  int	read_config_lines(int fd, t_data *data, char **map, int *i)
 {
     char	*line;
