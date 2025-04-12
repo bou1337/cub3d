@@ -6,7 +6,7 @@
 /*   By: hfazaz <hfazaz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 17:46:27 by hfazaz            #+#    #+#             */
-/*   Updated: 2025/04/08 11:36:42 by hfazaz           ###   ########.fr       */
+/*   Updated: 2025/04/12 19:08:06 by hfazaz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -272,6 +272,12 @@ char *extract_path(t_data *data, char *line)
     if (line[i] == 'N' && line[i + 1] == 'O')
     {
         path = extract_path(data, line);
+        if(data->textures_path[0] != NULL)
+        {
+            fprintf(stderr, "Error: Duplicate texture path\n");
+            free(path);
+            return (0);
+        }
         if (path)
             data->textures_path[0] = path;
         else
@@ -280,6 +286,12 @@ char *extract_path(t_data *data, char *line)
     else if (line[i] == 'S' && line[i + 1] == 'O')
     {
         path = extract_path(data, line);
+        if(data->textures_path[2] != NULL)
+        {
+            fprintf(stderr, "Error: Duplicate texture path\n");
+            free(path);
+            return (0);
+        }
         if (path)
             data->textures_path[2] = path;
         else
@@ -288,6 +300,12 @@ char *extract_path(t_data *data, char *line)
     else if (line[i] == 'W' && line[i + 1] == 'E')
     {
         path = extract_path(data, line);
+        if(data->textures_path[3] != NULL)
+        {
+            fprintf(stderr, "Error: Duplicate texture path\n");
+            free(path);
+            return (0);
+        }
         if (path)
             data->textures_path[3] = path;
         else
@@ -296,6 +314,12 @@ char *extract_path(t_data *data, char *line)
     else if (line[i] == 'E' && line[i + 1] == 'A')
     {
         path = extract_path(data, line);
+        if(data->textures_path[1] != NULL)
+        {
+            fprintf(stderr, "Error: Duplicate texture path\n");
+            free(path);
+            return (0);
+        }
         if (path)
             data->textures_path[1] = path;
         else
@@ -320,9 +344,25 @@ char *extract_path(t_data *data, char *line)
         return (0);
     }
     if (line[0] == 'C' && line[1] == ' ')
+    {
+        if (data->textures.ceil_color != -1)
+        {
+            fprintf(stderr, "Error: Duplicate ceiling color\n");
+            free(line);
+            return (0);
+        }
         data->textures.ceil_color = (r << 16) | (g << 8) | b;
+    }
     else if(line[0]== 'F' && line[1] == ' ')
+    {
+        if (data->textures.floor_color != -1)
+        {
+            fprintf(stderr, "Error: Duplicate floor color\n");
+            free(line);
+            return (0);
+        }
         data->textures.floor_color = (r << 16) | (g << 8) | b;
+    }
     data->color_index = 1;
     free(line);
     return (1);
