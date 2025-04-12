@@ -5,8 +5,7 @@
             t_data *data;
           if (parsing_data(argc, argv, &data))
              {
-                ft_printf("Eroor \n check that file should contain Valid colors and textures\n valid map\n pay attention 
-                  if you have any duplicates of info and map should be at the end of map file\n");
+                ft_fprintf("Eroor \n check that file should contain Valid colors and textures\n valid map\n pay attention if you have any duplicates of info and map should be at the end of map file\n");
                 return (1);
              }
             data->map.redraw = 1;
