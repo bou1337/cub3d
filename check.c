@@ -6,7 +6,7 @@
 /*   By: hfazaz <hfazaz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 17:46:27 by hfazaz            #+#    #+#             */
-/*   Updated: 2025/04/12 19:08:06 by hfazaz           ###   ########.fr       */
+/*   Updated: 2025/04/12 20:16:25 by hfazaz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,119 +223,78 @@ int	parse_color(char *line, int *r, int *g, int *b)
     return (line[i] == '\0' && components_found == 3);
 }
 
-char *extract_path(t_data *data, char *line)
+static int	is_direction_identifier(char c1, char c2)
 {
-    int     i;
-    int     j;
-    char    *path;
+    return ((c1 == 'N' && c2 == 'O') || (c1 == 'S' && c2 == 'O') ||
+        (c1 == 'W' && c2 == 'E') || (c1 == 'E' && c2 == 'A'));
+}
+
+static char	*allocate_path(char *line, int start)
+{
+    int		j;
+    int		len;
+    char	*path;
+
+    j = start;
+    while (line[j] && line[j] != ' ' && line[j] != '\t')
+        j++;
+    len = j - start;
+    path = malloc(sizeof(char) * (len + 1));
+    if (!path)
+        return (NULL);
+    return (path);
+}
+
+char	*extract_path(t_data *data, char *line)
+{
+    int		i;
+    int		j;
+    char	*path;
 
     i = 0;
     while (line[i] == ' ' || line[i] == '\t')
         i++;
-    if ((line[i] == 'N' && line[i + 1] == 'O') ||
-        (line[i] == 'S' && line[i + 1] == 'O') ||
-        (line[i] == 'W' && line[i + 1] == 'E') ||
-        (line[i] == 'E' && line[i + 1] == 'A'))
-    {
-        i += 2;
-        while (line[i] == ' ' || line[i] == '\t')
-            i++;
-        if (line[i] == '\0')
-            return (NULL);
-        j = i;
-        while (line[j] && line[j] != ' ' && line[j] != '\t')
-            j++;
-        path = malloc(sizeof(char) * (j - i + 1));
-        if (!path)
-            return (NULL);
-         j = 0;
-        while (line[i] && line[i] != ' ' && line[i] != '\t')
-        {
-            path[j] = line[i];
-            i++;
-            j++;
-        }
-        path[j] = '\0';
-        
-        return (path);
-    }
-    return (NULL);
+    if (!is_direction_identifier(line[i], line[i + 1]))
+        return (NULL);
+    i += 2;
+    while (line[i] == ' ' || line[i] == '\t')
+        i++;
+    if (line[i] == '\0')
+        return (NULL);
+    path = allocate_path(line, i);
+    if (!path)
+        return (NULL);
+    j = 0;
+    while (line[i] && line[i] != ' ' && line[i] != '\t')
+        path[j++] = line[i++];
+    path[j] = '\0';
+    return (path);
 }
 
- int is_texture(t_data *data, char *line)
+int	is_texture(t_data *data, char *line)
 {
-    int i;
-    char *path;
+    int	i;
+
     i = 0;
     while (line[i] == ' ' || line[i] == '\t')
         i++;
     if (line[i] == 'N' && line[i + 1] == 'O')
-    {
-        path = extract_path(data, line);
-        if(data->textures_path[0] != NULL)
-        {
-            fprintf(stderr, "Error: Duplicate texture path\n");
-            free(path);
-            return (0);
-        }
-        if (path)
-            data->textures_path[0] = path;
-        else
-            return (0);
-    }
+        return (handle_no_texture(data, line));
     else if (line[i] == 'S' && line[i + 1] == 'O')
-    {
-        path = extract_path(data, line);
-        if(data->textures_path[2] != NULL)
-        {
-            fprintf(stderr, "Error: Duplicate texture path\n");
-            free(path);
-            return (0);
-        }
-        if (path)
-            data->textures_path[2] = path;
-        else
-            return (0);
-    }
+        return (handle_so_texture(data, line));
     else if (line[i] == 'W' && line[i + 1] == 'E')
-    {
-        path = extract_path(data, line);
-        if(data->textures_path[3] != NULL)
-        {
-            fprintf(stderr, "Error: Duplicate texture path\n");
-            free(path);
-            return (0);
-        }
-        if (path)
-            data->textures_path[3] = path;
-        else
-            return (0);
-    }
+        return (handle_we_texture(data, line));
     else if (line[i] == 'E' && line[i + 1] == 'A')
-    {
-        path = extract_path(data, line);
-        if(data->textures_path[1] != NULL)
-        {
-            fprintf(stderr, "Error: Duplicate texture path\n");
-            free(path);
-            return (0);
-        }
-        if (path)
-            data->textures_path[1] = path;
-        else
-            return (0);
-    }
-    else
-        return (0);
-    
-    return (1);
+        return (handle_ea_texture(data, line));
+    return (0);
 }
 
- int	handle_colors(t_data *data, char *line)
+int	handle_colors(t_data *data, char *line)
 {
     int	r;
     int	g;
     int	b;
+    int	result;
 
     if (!parse_color(line + 1, &r, &g, &b))
     {
@@ -344,31 +303,18 @@ char *extract_path(t_data *data, char *line)
         return (0);
     }
     if (line[0] == 'C' && line[1] == ' ')
-    {
-        if (data->textures.ceil_color != -1)
-        {
-            fprintf(stderr, "Error: Duplicate ceiling color\n");
-            free(line);
-            return (0);
-        }
-        data->textures.ceil_color = (r << 16) | (g << 8) | b;
-    }
-    else if(line[0]== 'F' && line[1] == ' ')
-    {
-        if (data->textures.floor_color != -1)
-        {
-            fprintf(stderr, "Error: Duplicate floor color\n");
-            free(line);
-            return (0);
-        }
-        data->textures.floor_color = (r << 16) | (g << 8) | b;
-    }
-    data->color_index = 1;
+        result = set_ceiling_color(data, line, r, g, b);
+    else if (line[0] == 'F' && line[1] == ' ')
+        result = set_floor_color(data, line, r, g, b);
+    else
+        result = 0;
+    if (result)
+        data->color_index = 1;
     free(line);
-    return (1);
+    return (result);
 }
 
- int	handle_map_line(char *line, t_data *data, char **map, int *i)
+int	handle_map_line(char *line, t_data *data, char **map, int *i)
 {
     char	*padded_line;
 
@@ -387,18 +333,32 @@ char *extract_path(t_data *data, char *line)
     return (1);
 }
 
-int	process_config_line(char *line, t_data *data, char **map, int *i)
+int	handle_empty_or_space_line(char *line, int j)
 {
-    int j = 0;
-
-    while(line[j] == ' ' || line[j] == '\t')
-        j++;
-    if(line[j] == '\0')
+    if (line[j] == '\0')
     {
         free(line);
         return (1);
     }
-    
+    while (line[j] == ' ')
+        j++;
+    if (line[j] == '\0')
+    {
+        free(line);
+        return (1);
+    }
+    return (0);
+}
+
+int	process_config_line(char *line, t_data *data, char **map, int *i)
+{
+    int	j;
+
+    j = 0;
+    while (line[j] == ' ' || line[j] == '\t')
+        j++;
+    if (line[j] == '\0' || (line[j] == ' ' && handle_empty_or_space_line(line, j)))
+        return (1);
     if (line[j] == 'C' || line[j] == 'F')
         return (handle_colors(data, line));
     else if (is_texture(data, line))
@@ -411,29 +371,11 @@ int	process_config_line(char *line, t_data *data, char **map, int *i)
         data->map_found = 1;
         return (handle_map_line(line, data, map, i));
     }
-    else if(line[j] == ' ')
-    {
-        while(line[j] == ' ')
-            j++;
-        if(line[j] == '\0')
-        {
-            free(line);
-            return 1;
-        }
-        else 
-        {
-            free(line);
-            return 0;
-        }
-    }
-    else
-    {
-        // Invalid line type - should return error
-        fprintf(stderr, "Error: Invalid content in configuration: %s\n", line);
-        free(line);
-        return (0);  // Return FAILURE for unknown content
-    }
+    fprintf(stderr, "Error: Invalid content in configuration: %s\n", line);
+    free(line);
+    return (0);
 }
+
  int	read_config_lines(int fd, t_data *data, char **map, int *i)
 {
     char	*line;
@@ -941,4 +883,96 @@ int	check_map(t_data *data)
 void ft_fprintf(const char *s)
 {
     write(2,s,ft_strlen(s)) ;
+}
+
+static int	handle_no_texture(t_data *data, char *line)
+{
+    char	*path;
+
+    path = extract_path(data, line);
+    if (data->textures_path[0] != NULL)
+    {
+        fprintf(stderr, "Error: Duplicate texture path\n");
+        free(path);
+        return (0);
+    }
+    if (!path)
+        return (0);
+    data->textures_path[0] = path;
+    return (1);
+}
+
+static int	handle_so_texture(t_data *data, char *line)
+{
+    char	*path;
+
+    path = extract_path(data, line);
+    if (data->textures_path[2] != NULL)
+    {
+        fprintf(stderr, "Error: Duplicate texture path\n");
+        free(path);
+        return (0);
+    }
+    if (!path)
+        return (0);
+    data->textures_path[2] = path;
+    return (1);
+}
+
+static int	handle_we_texture(t_data *data, char *line)
+{
+    char	*path;
+
+    path = extract_path(data, line);
+    if (data->textures_path[3] != NULL)
+    {
+        fprintf(stderr, "Error: Duplicate texture path\n");
+        free(path);
+        return (0);
+    }
+    if (!path)
+        return (0);
+    data->textures_path[3] = path;
+    return (1);
+}
+
+static int	handle_ea_texture(t_data *data, char *line)
+{
+    char	*path;
+
+    path = extract_path(data, line);
+    if (data->textures_path[1] != NULL)
+    {
+        fprintf(stderr, "Error: Duplicate texture path\n");
+        free(path);
+        return (0);
+    }
+    if (!path)
+        return (0);
+    data->textures_path[1] = path;
+    return (1);
+}
+
+static int	set_ceiling_color(t_data *data, char *line, int r, int g, int b)
+{
+    if (data->textures.ceil_color != -1)
+    {
+        fprintf(stderr, "Error: Duplicate ceiling color\n");
+        free(line);
+        return (0);
+    }
+    data->textures.ceil_color = (r << 16) | (g << 8) | b;
+    return (1);
+}
+
+static int	set_floor_color(t_data *data, char *line, int r, int g, int b)
+{
+    if (data->textures.floor_color != -1)
+    {
+        fprintf(stderr, "Error: Duplicate floor color\n");
+        free(line);
+        return (0);
+    }
+    data->textures.floor_color = (r << 16) | (g << 8) | b;
+    return (1);
 }
