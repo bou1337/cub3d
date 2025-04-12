@@ -58,7 +58,7 @@ int	handle_colors(t_data *data, char *line)
         return (0);
     }
     if (line[0] == 'C' && line[1] == ' ')
-        result = set_ceiling_color(data, line, r, g, b);
+        result = set_ceiling_color(data, line);
     else if (line[0] == 'F' && line[1] == ' ')
         result = set_floor_color(data, line, r, g, b);
     else

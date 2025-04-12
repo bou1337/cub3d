@@ -38,26 +38,26 @@ int	parse_int(const char *str, int *i)
     return (1);
 }
 
-int	parse_color(char *line, int *r, int *g, int *b)
+int	parse_color(char *line, char *data)
 {
     int	i;
     int	components_found;
-
+    
     i = 1;
     components_found = 0;
     while (line[i] == ' ' || line[i] == '\t')
         i++;
-    if (!check_color_component(line, &i, r))
+    if (!check_color_component(line, &i, data->r))
         return (0);
     components_found++;
     if (line[i++] != ',')
         return (0);
-    if (!check_color_component(line, &i, g))
+    if (!check_color_component(line, &i, data->g))
         return (0);
     components_found++;
     if (line[i++] != ',')
         return (0);
-    if (!check_color_component(line, &i, b))
+    if (!check_color_component(line, &i, data->b))
         return (0);
     components_found++;
     while (line[i] == ' ' || line[i] == '\t')
@@ -71,7 +71,7 @@ static int	is_direction_identifier(char c1, char c2)
         (c1 == 'W' && c2 == 'E') || (c1 == 'E' && c2 == 'A'));
 }
 
-static char	*allocate_path(char *line, int start)
+char	*allocate_path(char *line, int start)
 {
     int		j;
     int		len;

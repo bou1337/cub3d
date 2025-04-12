@@ -115,6 +115,9 @@ typedef struct s_data
 	t_textures	textures;
 	t_player	player;
 	t_ray		*rays;
+	int		r;
+	int		g;
+	int		b;
 	int map_found  ;
 	int color_index ;
 	int texture_index ;
@@ -194,6 +197,7 @@ int alloc_data(t_data **data) ;
 int parsing_data(int argc, char *argv[], t_data **data) ;
 char	*handle_end_of_file(char *line, int i);
 void ft_fprintf(const char *s) ;
+char	*allocate_path(char *line, int start) ;
 int	check_map(t_data *data) ;
 int	set_ceiling_color(t_data *data, char *line, int r, int g, int b) ;
 int	handle_ea_texture(t_data *data, char *line) ;
