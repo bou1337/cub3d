@@ -195,5 +195,12 @@ int parsing_data(int argc, char *argv[], t_data **data) ;
 char	*handle_end_of_file(char *line, int i);
 void ft_fprintf(const char *s) ;
 int	check_map(t_data *data) ;
+int	set_ceiling_color(t_data *data, char *line, int r, int g, int b) ;
+int	handle_ea_texture(t_data *data, char *line) ;
+int	handle_no_texture(t_data *data, char *line) ;
+int	handle_so_texture(t_data *data, char *line) ;
+int	handle_we_texture(t_data *data, char *line) ;
+int	set_floor_color(t_data *data, char *line, int r, int g, int b) ;
+
 
 #endif

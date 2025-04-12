@@ -885,7 +885,7 @@ void ft_fprintf(const char *s)
     write(2,s,ft_strlen(s)) ;
 }
 
-static int	handle_no_texture(t_data *data, char *line)
+ int	handle_no_texture(t_data *data, char *line)
 {
     char	*path;
 
@@ -902,7 +902,7 @@ static int	handle_no_texture(t_data *data, char *line)
     return (1);
 }
 
-static int	handle_so_texture(t_data *data, char *line)
+int	handle_so_texture(t_data *data, char *line)
 {
     char	*path;
 
@@ -919,7 +919,7 @@ static int	handle_so_texture(t_data *data, char *line)
     return (1);
 }
 
-static int	handle_we_texture(t_data *data, char *line)
+ int	handle_we_texture(t_data *data, char *line)
 {
     char	*path;
 
@@ -936,7 +936,7 @@ static int	handle_we_texture(t_data *data, char *line)
     return (1);
 }
 
-static int	handle_ea_texture(t_data *data, char *line)
+ int	handle_ea_texture(t_data *data, char *line)
 {
     char	*path;
 
@@ -953,7 +953,7 @@ static int	handle_ea_texture(t_data *data, char *line)
     return (1);
 }
 
-static int	set_ceiling_color(t_data *data, char *line, int r, int g, int b)
+ int	set_ceiling_color(t_data *data, char *line, int r, int g, int b)
 {
     if (data->textures.ceil_color != -1)
     {
@@ -965,7 +965,7 @@ static int	set_ceiling_color(t_data *data, char *line, int r, int g, int b)
     return (1);
 }
 
-static int	set_floor_color(t_data *data, char *line, int r, int g, int b)
+ int	set_floor_color(t_data *data, char *line, int r, int g, int b)
 {
     if (data->textures.floor_color != -1)
     {
