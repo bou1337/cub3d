@@ -1,4 +1,4 @@
-#include "./cub3d.h"
+#include "../cub3d.h"
 int	process_config_line(char *line, t_data *data, char **map, int *i)
 {
     int	j;

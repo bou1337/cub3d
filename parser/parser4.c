@@ -1,4 +1,4 @@
-#include "./cub3d.h"
+#include "../cub3d.h"
 
 char	*extract_path(t_data *data, char *line)
 {
@@ -51,7 +51,7 @@ int	handle_colors(t_data *data, char *line)
     int	b;
     int	result;
 
-    if (!parse_color(line + 1, &r, &g, &b))
+    if (!parse_color(line + 1, data))
     {
         fprintf(stderr, "Error: Invalid color\n");
         free(line);
@@ -60,7 +60,7 @@ int	handle_colors(t_data *data, char *line)
     if (line[0] == 'C' && line[1] == ' ')
         result = set_ceiling_color(data, line);
     else if (line[0] == 'F' && line[1] == ' ')
-        result = set_floor_color(data, line, r, g, b);
+        result = set_floor_color(data, line);
     else
         result = 0;
     if (result)

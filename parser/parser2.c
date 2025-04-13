@@ -1,4 +1,4 @@
-#include "./cub3d.h"
+#include "../cub3d.h"
 
 int	parse_int(const char *str, int *i)
 {
@@ -38,7 +38,7 @@ int	parse_int(const char *str, int *i)
     return (1);
 }
 
-int	parse_color(char *line, char *data)
+int	parse_color(char *line, t_data *data)
 {
     int	i;
     int	components_found;
@@ -47,17 +47,17 @@ int	parse_color(char *line, char *data)
     components_found = 0;
     while (line[i] == ' ' || line[i] == '\t')
         i++;
-    if (!check_color_component(line, &i, data->r))
+    if (!check_color_component(line, &i, &data->r))
         return (0);
     components_found++;
     if (line[i++] != ',')
         return (0);
-    if (!check_color_component(line, &i, data->g))
+    if (!check_color_component(line, &i, &data->g))
         return (0);
     components_found++;
     if (line[i++] != ',')
         return (0);
-    if (!check_color_component(line, &i, data->b))
+    if (!check_color_component(line, &i, &data->b))
         return (0);
     components_found++;
     while (line[i] == ' ' || line[i] == '\t')
@@ -65,7 +65,7 @@ int	parse_color(char *line, char *data)
     return (line[i] == '\0' && components_found == 3);
 }
 
-static int	is_direction_identifier(char c1, char c2)
+int	is_direction_identifier(char c1, char c2)
 {
     return ((c1 == 'N' && c2 == 'O') || (c1 == 'S' && c2 == 'O') ||
         (c1 == 'W' && c2 == 'E') || (c1 == 'E' && c2 == 'A'));

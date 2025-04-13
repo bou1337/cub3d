@@ -6,7 +6,7 @@
 /*   By: hfazaz <hfazaz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 17:46:27 by hfazaz            #+#    #+#             */
-/*   Updated: 2025/04/12 23:00:47 by hfazaz           ###   ########.fr       */
+/*   Updated: 2025/04/13 16:19:59 by hfazaz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,6 @@ int	handle_so_texture(t_data *data, char *line)
         free(line);
         return (0);
     }
-    data->textures.floor_color = (data->r << 16) | (data->g << 8) | sata->b;
+    data->textures.floor_color = (data->r << 16) | (data->g << 8) | data->b;
     return (1);
 }

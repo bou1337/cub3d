@@ -1,4 +1,4 @@
-#include ./cub3d.h>
+#include "../cub3d.h"
 
 int ft_strcmp(const char *s1, const char *s2)
 {
@@ -22,7 +22,6 @@ int	check_extension(const char *filename)
             dot = filename;
         filename++;
     }
-    // printf("dot: %s\n", dot);
     if (!dot || dot[1] == '\0')
         return (0);
     

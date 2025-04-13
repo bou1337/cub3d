@@ -1,3 +1,5 @@
+#include "../cub3d.h"
+
 int check_bottom_borders(char **map, int height)
 {
     int i;

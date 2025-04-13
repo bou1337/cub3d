@@ -162,7 +162,7 @@ char	*get_line(int fd) ;
 int	is_valid_map_char(char c) ;
 int	is_map_line(char *line) ;
 int	parse_int(const char *str, int *i) ;
-int	parse_color(char *line, int *r, int *g, int *b)  ;
+int	parse_color(char *line, t_data *data)  ;
 char *extract_path(t_data *data, char *line) ;
 int	map_len(int fd)  ;
 char	**read_cub_file(int fd, t_data *data, char *filename) ;
@@ -176,6 +176,7 @@ int check_right_borders(char **map) ;
 int	check_for_borders(char **map) ;
 char	*pad_line(char *line) ;
 int	check_color_component(char *line, int *i, int *component) ;
+int	is_direction_identifier(char c1, char c2);
 int is_texture(t_data *data, char *line) ;
 int	handle_colors(t_data *data, char *line) ;
 int	handle_map_line(char *line, t_data *data, char **map, int *i) ;
@@ -199,12 +200,14 @@ char	*handle_end_of_file(char *line, int i);
 void ft_fprintf(const char *s) ;
 char	*allocate_path(char *line, int start) ;
 int	check_map(t_data *data) ;
-int	set_ceiling_color(t_data *data, char *line, int r, int g, int b) ;
+int	set_ceiling_color(t_data *data, char *line) ;
 int	handle_ea_texture(t_data *data, char *line) ;
 int	handle_no_texture(t_data *data, char *line) ;
 int	handle_so_texture(t_data *data, char *line) ;
 int	handle_we_texture(t_data *data, char *line) ;
-int	set_floor_color(t_data *data, char *line, int r, int g, int b) ;
+int	set_floor_color(t_data *data, char *line) ;
+int	handle_empty_or_space_line(char *line, int j) ;
+int	handle_colors(t_data *data, char *line) ;
 
 
 #endif

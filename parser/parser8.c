@@ -1,3 +1,5 @@
+#include "../cub3d.h"
+
 int check_player_position(char **map)
 {
     int  i;

@@ -1,3 +1,5 @@
+#include "../cub3d.h"
+
 int	validate_args(int argc, char **argv, int *fd)
 {
     if (argc != 2)
