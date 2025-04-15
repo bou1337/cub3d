@@ -84,7 +84,7 @@ int	put_pixel_to_pixel(t_data *data, t_img *img, int x, int y)
 		offset_x = (int)((data->rays[x].hit_x / data->screen.size) * img->w)
 			% img->w;
 	offset_y = ((y - data->rays[x].r_top_y) * img->h) / data->rays[x].wall_h;
-	offset_y = offset_y % img->h;
+	 //offset_y = offset_y  ;
 	dest_pixel = (unsigned int *)(data->img.addr + (y * data->img.line + x
 				* (data->img.bpp / 8)));
 	src_pixel = (unsigned int *)(img->addr + (offset_y * img->line
