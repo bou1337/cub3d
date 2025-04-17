@@ -29,7 +29,7 @@ int	draw_ray(t_data *data, int x)
 	data->rays[x].distance *= cos(normalize_angle(data->rays[x].ray_angle
 				- data->player.angle));
 	data->rays[x].wall_h = ((1 / data->rays[x].distance) * data->screen.height
-			*13.0);
+			*15.0);
 	wall_h = fmin(data->rays[x].wall_h, data->screen.height);
 	data->rays[x].bottom_y = floor((data->screen.height / 2) + (wall_h / 2));
 	data->rays[x].r_bottom_y = floor((data->screen.height / 2)
