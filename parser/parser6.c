@@ -42,7 +42,6 @@ int	process_map_data(int fd, t_data *data, char **map)
     
     if (i == 0)
     {
-        fprintf(stderr, "Error: No valid map data found\n");
         free(map);
         return (0);
     }
@@ -57,7 +56,6 @@ char	**read_cub_file(int fd, t_data *data, char *filename)
     map_length = map_len(fd);
     if (map_length == 0)
     {
-        fprintf(stderr, "Error: Empty map file or no valid map lines\n");
         return (NULL);
     }
     if (!allocate_map(&map, map_length))

@@ -16,28 +16,32 @@
 int	parse_color(char *line, t_data *data)
 {
     int	i;
-    int	components_found;
 
     i = 1;
-    components_found = 0;
+
     while (line[i] == ' ' || line[i] == '\t')
         i++;
     if (!check_color_component(line, &i, &data->r))
         return (0);
-    components_found++;
-    if (line[i++] != ',')
-        return (0);
-    if (!check_color_component(line, &i, &data->g))
-        return (0);
-    components_found++;
-    if (line[i++] != ',')
-        return (0);
-    if (!check_color_component(line, &i, &data->b))
-        return (0);
-    components_found++;
     while (line[i] == ' ' || line[i] == '\t')
         i++;
-    return (line[i] == '\0' && components_found == 3);
+    if (line[i++] != ',')
+        return (0);
+    while (line[i] == ' ' || line[i] == '\t')
+        i++;
+    if (!check_color_component(line, &i, &data->g))
+        return (0);
+    while (line[i] == ' ' || line[i] == '\t')
+        i++;
+    if (line[i++] != ',')
+        return (0);
+    while (line[i] == ' ' || line[i] == '\t')
+        i++;
+    if (!check_color_component(line, &i, &data->b))
+        return (0);
+    while (line[i] == ' ' || line[i] == '\t')
+        i++;
+    return (line[i] == '\0');
 }
 
 int	is_direction_identifier(char c1, char c2)

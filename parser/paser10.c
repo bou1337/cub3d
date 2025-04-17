@@ -4,12 +4,10 @@ int	validate_args(int argc, char **argv, int *fd)
 {
     if (argc != 2)
     {
-        fprintf(stderr, "Usage: %s map.cub\n", argv[0]);
         return (0);
     }
     if (!check_extension(argv[1]))
     {
-        fprintf(stderr, "Error: File must have a .cub extension\n");
         return (0);
     }
     *fd = open(argv[1], O_RDONLY);
@@ -84,7 +82,6 @@ void ft_fprintf(const char *s)
     path = extract_path(data, line);
     if (data->textures_path[0] != NULL)
     {
-        fprintf(stderr, "Error: Duplicate texture path\n");
         free(path);
         return (0);
     }

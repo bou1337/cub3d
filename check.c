@@ -6,7 +6,7 @@
 /*   By: hfazaz <hfazaz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 17:46:27 by hfazaz            #+#    #+#             */
-/*   Updated: 2025/04/13 16:19:59 by hfazaz           ###   ########.fr       */
+/*   Updated: 2025/04/17 17:40:29 by hfazaz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ int	handle_so_texture(t_data *data, char *line)
     path = extract_path(data, line);
     if (data->textures_path[2] != NULL)
     {
-        fprintf(stderr, "Error: Duplicate texture path\n");
         free(path);
         return (0);
     }
@@ -38,7 +37,6 @@ int	handle_so_texture(t_data *data, char *line)
     path = extract_path(data, line);
     if (data->textures_path[3] != NULL)
     {
-        fprintf(stderr, "Error: Duplicate texture path\n");
         free(path);
         return (0);
     }
@@ -55,7 +53,6 @@ int	handle_so_texture(t_data *data, char *line)
     path = extract_path(data, line);
     if (data->textures_path[1] != NULL)
     {
-        fprintf(stderr, "Error: Duplicate texture path\n");
         free(path);
         return (0);
     }
@@ -69,7 +66,6 @@ int	handle_so_texture(t_data *data, char *line)
 {
     if (data->textures.ceil_color != -1)
     {
-        fprintf(stderr, "Error: Duplicate ceiling color\n");
         free(line);
         return (0);
     }
@@ -81,7 +77,6 @@ int	handle_so_texture(t_data *data, char *line)
 {
     if (data->textures.floor_color != -1)
     {
-        fprintf(stderr, "Error: Duplicate floor color\n");
         free(line);
         return (0);
     }

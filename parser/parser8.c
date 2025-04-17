@@ -26,12 +26,10 @@ int check_player_position(char **map)
     
     if (player_count == 0)
     {
-        fprintf(stderr, "Error: No player position found\n");
         return (0);
     }
     else if (player_count > 1)
     {
-        fprintf(stderr, "Error: Multiple player positions found\n");
         return (0);
     }
     
@@ -94,23 +92,18 @@ int check_config_data(t_data *data)
     if (data->textures.ceil_color == -1 ||
         data->textures.floor_color == -1)
     {
-        fprintf(stderr,
-                "Error: Missing floor or ceiling color configuration\n");
         return (0);
     }
     if (!check_color_range(data->textures.ceil_color))
     {
-        fprintf(stderr, "Error: Ceiling color invalid\n");
         return (0);
     }
     if (!check_color_range(data->textures.floor_color))
     {
-        fprintf(stderr, "Error: Floor color invalid\n");
         return (0);
     }
     if (!check_player_position(data->map.map))
     {
-        fprintf(stderr, "Error: Player position not found\n");
         return (0);
     }
     return (1);

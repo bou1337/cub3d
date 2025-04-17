@@ -20,7 +20,6 @@ int	process_config_line(char *line, t_data *data, char **map, int *i)
         data->map_found = 1;
         return (handle_map_line(line, data, map, i));
     }
-    fprintf(stderr, "Error: Invalid content in configuration: %s\n", line);
     free(line);
     return (0);
 }
@@ -49,7 +48,6 @@ int	check_empty_line(char *line)
     {
         if (line[j] != ' ' && line[j] != '\t')
         {
-            fprintf(stderr, "Error: Invalid structure\n");
             free(line);
             return (0);
         }
@@ -71,7 +69,6 @@ int	check_empty_line(char *line)
         {
             if (line[j] != ' ' && line[j] != '\t')
             {
-                fprintf(stderr, "Error: Invalid content after map section\n");
                 free(line);
                 return (0);
             }

@@ -53,7 +53,6 @@ int	handle_colors(t_data *data, char *line)
 
     if (!parse_color(line + 1, data))
     {
-        fprintf(stderr, "Error: Invalid color\n");
         free(line);
         return (0);
     }
@@ -75,7 +74,6 @@ int	handle_map_line(char *line, t_data *data, char **map, int *i)
 
     if (data->color_index == 0 || data->texture_index == 0)
     {
-        fprintf(stderr, "Map should be at the end of file\n");
         free(line);
         return (0);
     }
