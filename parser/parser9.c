@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser9.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hfazaz <hfazaz@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/19 15:05:48 by hfazaz            #+#    #+#             */
+/*   Updated: 2025/04/19 15:05:49 by hfazaz           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../cub3d.h"
 
 int	check_bottom_borders(char **map, int height)
@@ -101,21 +113,22 @@ int	check_for_borders(char **map)
 	return (1);
 }
 
-int	inite_data(t_data *data)
+int inite_data(t_data *data)
 {
-	data->textures.ceil_color = -1;
-	data->textures.floor_color = -1;
-	data->color_index = 0;
-	data->texture_index = 0;
-	data->map.map = NULL;
-	data->map_found = 0;
-	data->map.height = 0;
-	data->map.width = 0;
-	data->r = 0;
-	data->g = 0;
-	data->b = 0;
-	data->textures_path[0] = NULL;
-	data->textures_path[1] = NULL;
-	data->textures_path[2] = NULL;
-	data->textures_path[3] = NULL;
+    data->textures.ceil_color = -1;
+    data->textures.floor_color = -1;
+    data->color_index = 0;
+    data->texture_index = 0;
+    data->map.map = NULL;
+    data->map_found = 0;
+    data->map.height = 0;
+    data->map.width = 0;
+    data->r = 0;
+    data->g = 0;
+    data->b = 0;
+    data->textures_path[0] = NULL;
+    data->textures_path[1] = NULL;
+    data->textures_path[2] = NULL;
+    data->textures_path[3] = NULL;
+    return 1;
 }

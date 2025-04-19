@@ -6,7 +6,7 @@
 /*   By: hfazaz <hfazaz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 16:48:51 by hfazaz            #+#    #+#             */
-/*   Updated: 2025/04/18 16:48:52 by hfazaz           ###   ########.fr       */
+/*   Updated: 2025/04/19 15:05:04 by hfazaz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,16 @@ int	process_config_line(char *line, t_data *data, char **map, int *i)
 	j = 0;
 	while (line[j] == ' ' || line[j] == '\t')
 		j++;
-	if (line[j] == '\0' || (line[j] == ' ' && handle_empty_or_space_line(line,
-				j)))
+	if (line[j] == '\0')
+	{
+		free(line);
 		return (1);
+	}
+	else if (line[j] == ' ' && handle_empty_or_space_line(line, j))
+	{
+		return (1);
+	}
+	
 	if (line[j] == 'C' || line[j] == 'F')
 		return (handle_colors(data, line));
 	else if (is_texture(data, line))
@@ -38,18 +45,18 @@ int	process_config_line(char *line, t_data *data, char **map, int *i)
 	return (0);
 }
 
-int	read_config_lines(int fd, t_data *data, char **map, int *i)
+int read_config_lines(int fd, t_data *data, char **map, int *i)
 {
-	char	*line;
+    char *line;
 
-	while ((line = get_line(fd)))
-	{
-		if ((!process_config_line(line, data, map, i)))
-			return (0);
-		if (*i > 0)
-			return (1);
-	}
-	return (0);
+    while ((line = get_line(fd)))
+    {
+        if ((!process_config_line(line, data, map, i)))
+            return (0);
+        if (*i > 0)
+            return (1);
+    }
+    return (0);
 }
 
 int	check_empty_line(char *line)
@@ -94,22 +101,25 @@ int	read_remaining_lines(int fd)
 
 int	read_map_lines(int fd, char **map, int *i)
 {
-	char *line;
+    char *line;
 
-	while ((line = get_line(fd)))
-	{
-		if (!is_map_line(line))
-		{
-			if (!check_empty_line(line))
-				return (0);
-			if (!read_remaining_lines(fd))
-				return (0);
-			break ;
-		}
-		line = pad_line(line);
-		map[*i] = line;
-		(*i)++;
-	}
-	map[*i] = NULL;
-	return (1);
+    while ((line = get_line(fd)))
+    {
+        if (!is_map_line(line))
+        {
+            if (!check_empty_line(line))
+                return (0);
+            if (!read_remaining_lines(fd))
+                return (0);
+            break;
+        }
+        char *padded = pad_line(line);
+        free(line);
+        if (!padded)
+            return (0);
+        map[*i] = padded;
+        (*i)++;
+    }
+    map[*i] = NULL;
+    return (1);
 }

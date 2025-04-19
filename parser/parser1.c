@@ -6,7 +6,7 @@
 /*   By: hfazaz <hfazaz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 16:41:41 by hfazaz            #+#    #+#             */
-/*   Updated: 2025/04/18 16:41:42 by hfazaz           ###   ########.fr       */
+/*   Updated: 2025/04/19 15:04:44 by hfazaz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,35 +62,45 @@ static char	*reallocate_line(char *line, int capacity, int i)
 	return (temp);
 }
 
-char	*get_line(int fd)
+char *get_line(int fd)
 {
-	char	*line;
-	int		capacity;
-	int		i;
-	char	c;
+    char *line;
+    int capacity;
+    int i;
+    char c;
+    int read_result;
 
-	capacity = 128;
-	i = 0;
-	line = malloc(sizeof(char) * capacity);
-	if (!line)
-		return (NULL);
-	while (read(fd, &c, 1) > 0)
-	{
-		if (c == '\n')
-		{
-			line[i] = '\0';
-			return (line);
-		}
-		line[i++] = c;
-		if (i >= capacity - 1)
-		{
-			capacity *= 2;
-			line = reallocate_line(line, capacity, i);
-			if (!line)
-				return (NULL);
-		}
-	}
-	return (handle_end_of_file(line, i));
+    capacity = 128;
+    i = 0;
+    line = malloc(sizeof(char) * capacity);
+    if (!line)
+        return (NULL);
+    
+    while ((read_result = read(fd, &c, 1)) > 0)
+    {
+        if (c == '\n')
+        {
+            line[i] = '\0';
+            return (line);
+        }
+        line[i++] = c;
+        if (i >= capacity - 1)
+        {
+            capacity *= 2;
+            line = reallocate_line(line, capacity, i);
+            if (!line)
+                return (NULL);
+        }
+    }
+    
+    if (read_result == 0 && i > 0)
+    {
+        line[i] = '\0';
+        return (line);
+    }
+    
+    free(line); 
+    return (NULL);
 }
 
 char	*handle_end_of_file(char *line, int i)

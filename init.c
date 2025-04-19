@@ -1,4 +1,3 @@
-
 #include "cub3d.h"
 
 static int	init_img(t_data *data)
@@ -127,26 +126,48 @@ int parsing_data(int argc, char *argv[], t_data **data)
 {
     int     fd;
     char    **map;
+    
     if (alloc_data(data) || !inite_data(*data))
+    {
+        if (*data)
+        {
+            if ((*data)->rays)
+                free((*data)->rays);
+            free(*data);
+            *data = NULL;
+        }
         return (1);
+    }
+    
     if (!validate_args(argc, argv, &fd))
+    {
+        free_data(*data);
+        *data = NULL;
         return (1);
+    }
+    
     map = read_cub_file(fd, *data, argv[1]);
     close(fd);
+    
     if (map == NULL)
-        return (1);
-    (*data)->map.map = map;
-    int i = 0;
-    if (!check_config_data(*data) || !check_for_borders(map))
     {
-        ft_fprintf( "Invalid map format\n");
-        cleanup(*data, map);
+        free_data(*data);
+        *data = NULL;
         return (1);
     }
+    
+    (*data)->map.map = map;
+    
+    if (!check_config_data(*data) || !check_for_borders(map) || !check_map(*data))
+    {
+        ft_fprintf("Invalid map format\n");
+        free_data(*data);
+        *data = NULL;
+        return (1);
+    }
+    
     set_player_data(*data);
     map_size(*data);
-    if(!check_map(*data)){
-        return 1;
-    }
+    
     return (0);
 }

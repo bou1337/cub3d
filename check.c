@@ -6,7 +6,7 @@
 /*   By: hfazaz <hfazaz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 17:46:27 by hfazaz            #+#    #+#             */
-/*   Updated: 2025/04/17 17:40:29 by hfazaz           ###   ########.fr       */
+/*   Updated: 2025/04/19 15:02:36 by hfazaz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,40 +25,54 @@ int	handle_so_texture(t_data *data, char *line)
         return (0);
     }
     if (!path)
+    {
+        free(line); 
         return (0);
+    }
     data->textures_path[2] = path;
+    free(line);
     return (1);
 }
 
- int	handle_we_texture(t_data *data, char *line)
+int handle_we_texture(t_data *data, char *line)
 {
-    char	*path;
+    char *path;
 
     path = extract_path(data, line);
     if (data->textures_path[3] != NULL)
     {
         free(path);
+        free(line); 
         return (0);
     }
     if (!path)
+    {
+        free(line); 
         return (0);
+    }
     data->textures_path[3] = path;
+    free(line); 
     return (1);
 }
 
- int	handle_ea_texture(t_data *data, char *line)
+int handle_ea_texture(t_data *data, char *line)
 {
-    char	*path;
+    char *path;
 
     path = extract_path(data, line);
     if (data->textures_path[1] != NULL)
     {
         free(path);
+        free(line); 
         return (0);
     }
     if (!path)
+    {
+        free(line);
         return (0);
+    }
     data->textures_path[1] = path;
+    free(line);
     return (1);
 }
 
