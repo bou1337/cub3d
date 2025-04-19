@@ -145,8 +145,6 @@ int parsing_data(int argc, char *argv[], t_data **data)
     }
     set_player_data(*data);
     map_size(*data);
-    if (init_data(*data)) 
-    return (1);
     if(!check_map(*data)){
         return 1;
     }

@@ -16,6 +16,10 @@ int main(int argc, char *argv[])
                    free_data(data) ;
         return (1);
     }
+
+    return 1 ;
+    if (init_data(data))
+    return (1);
     data->map.redraw = 1;
     draw_map(data);
     mlx_hook(data->win, DestroyNotify, 0, ft_close, data);
