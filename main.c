@@ -13,6 +13,7 @@ int main(int argc, char *argv[])
                    "\033[36m • \033[0mNo \033[32mduplicate configuration elements\033[0m ⚠️\n"
                    "\033[36m • \033[0mMap is positioned at the \033[32mend of the file\033[0m 📄\n"
                    "\033[36m • \033[0mOnly \033[32mone player starting position\033[0m 👤 is defined\n");
+                   free_data(data) ;
         return (1);
     }
     data->map.redraw = 1;

@@ -208,6 +208,7 @@ int	handle_we_texture(t_data *data, char *line) ;
 int	set_floor_color(t_data *data, char *line) ;
 int	handle_empty_or_space_line(char *line, int j) ;
 int	handle_colors(t_data *data, char *line) ;
+void free_data(t_data *data) ;
 
 
 #endif

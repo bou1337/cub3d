@@ -13,6 +13,7 @@ int	ft_close(t_data *data)
 	if (data->rays)
 		free(data->rays);
 	data->rays = NULL;
+	free(data) ;
 	return (0);
 }
 
